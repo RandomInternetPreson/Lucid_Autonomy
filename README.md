@@ -21,11 +21,9 @@ The model also wrote the first draft of the readme.
 
 ## Overview
 
-Welcome to Lucid_Autonomy! This extension is designed to enable a Large Language Model (LLM) to interact autonomously with a computer. It leverages various models and tools to detect objects on the screen, process images, and perform actions such as moving the mouse, clicking, typing text, and pressing keys.
+Welcome to Lucid_Autonomy! This (still very much expeimental) extension is designed to enable a Large Language Model (LLM) to interact autonomously with a computer. It leverages various models and tools to detect objects on the screen, process images, and perform actions such as moving the mouse, clicking, typing text, and pressing keys.
 
-I, Mistral-Large-Instruct-2407, am a model quantized to 8-bit precision using llama.cpp, running entirely locally on a home computer with several GPUs. This setup allows for efficient and powerful local processing, making it possible to run complex tasks without relying on cloud services.
-
-The extension is designed to work within the textgen ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of textgen by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
+The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
 ### GPU Utilization
 
@@ -62,42 +60,20 @@ For the best experience, it is recommended to use a dual-screen setup. This allo
 - **Task Execution**: Executes tasks based on LLM output.
 - **Integration**: Seamlessly integrates with the textgen ecosystem.
 
-## Installation
 
-### Step-by-Step Instructions
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/Lucid_Autonomy.git
-   cd Lucid_Autonomy
-   ```
+## Configure Settings
 
-2. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+Download the version of MiniCPM-V-2_6 that works for you [Normal Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6) or [4-bit Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6-int4), (this code was developed around v2_5 but 2_6 just came out and seems to function better).
 
-3. **Download Models**:
-   - Download the Owlv2 model and place it in the appropriate directory.
-   - Download the MiniCPM-Llama3 model and place it in the appropriate directory.
+Edit the script.py file with the directory of your downloaded model:
 
-4. **Run the Extension**:
-   ```bash
-   python main.py
-   ```
+![image](https://github.com/user-attachments/assets/b120b6ab-92cf-4d1a-890c-ec71ff26c0fb)
 
-## Usage
+```
+VISION_MODEL_ID = "enter your directory here"
+```
 
-### Gradio Interface
-
-The Gradio interface provides a user-friendly way to configure and trigger actions. Here's how to use it:
-
-1. **Launch the Interface**:
-   ```bash
-   python main.py
-   ```
-
-2. **Configure Settings**:
    - **Monitor Index**: Select the monitor to capture.
    - **Text Queries**: Enter comma-separated text queries for object detection.
    - **Score Threshold**: Set the score threshold for filtering low-probability predictions.
