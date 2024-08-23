@@ -84,7 +84,27 @@ The repo include a file called "WebColorChange.html" you can run this in a web b
 1. Run the the WebColorChange web page:
 ![image](https://github.com/user-attachments/assets/f8399cc1-f846-4e8f-9317-97fd2dbcbe5e)
 
-2. 
+2. Press the Take Screenshot button after adjusting the necessary fields.  You will see a number of new files and folders created in the Lucid_Autonomy extenssion folder.
+   - screenshot.png is the original screenshot
+   - Human_annotated_image.png has red boxes around everything that owlv2 detected, this is good to have open and let auto refresh upon every consecutiative screensshot so you can see what is going on.
+   - annotated_image.png is the png that is cropped for every box and sent to the MiniCPM model (I will remove these duplicates later)
+   - ImageOutputTest is a folder that gets updated upon every screenshot that has the cropped images and json files.  Depending in how many images there are and what you are having MiniCPM do, this could take a while.
+  
+   ![image](https://github.com/user-attachments/assets/1927353b-ad01-4c8f-bb3d-9c5650469aa4)
+
+
+3. Begin talking with your AI, start out with:
+
+   ```
+   Can you autonomously change the background color until the background is red and then cease sending yourself tasks?
+
+   0,896,2052 takes you to the text input field for the textgen software we are running, this is where you can click to paste your inner thoughts to progress through the objective autonomously
+   ```
+   The AI can choose pictures to click on, and it can also use coordinates.  0,896,2052 is monitor=0, x=896, y=2052  The coordinates I provided the AI are for my setup, you need to figure out where pertientn UI elements are for your setup.  To do this I use XnView https://www.xnview.com/en/ and view screenshots in the image viewer, UI shows the x,y coordinates on the screen, most image viewers will tell you the x,y coordinates.  Being able to tell the AI where perminent UI features are is useful.
+
+4. Here is an example of the AI's response:
+
+   
 
 
 ## Key Components
