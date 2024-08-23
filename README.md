@@ -104,7 +104,22 @@ The repo include a file called "WebColorChange.html" you can run this in a web b
 
 4. Here is an example of the AI's response:
 
+   ![image](https://github.com/user-attachments/assets/8d3d1861-e5ae-4102-ac02-8a8144181ff6)
+
+   You will notice that the json information is visible, I will change this later, but it will be delted and does not accumulate.
    
+   ![image](https://github.com/user-attachments/assets/2e4b34ed-5e94-455f-8d87-913fff18d500)
+
+   I only sent the original message, the AI did the rest on its own.
+
+I've gotten the AI to start on the incognido page, where it figures out where to enter google.com, does a web search for animal facts, chooses a hyperlink, and scroll down the page accumulating information as it reads the page.  
+
+This is a bit slow (doing a page down for every screenshot and hoping MiniCPM will pick up enough text), I will be mashing my LucidWebSearch extension with this extension so the AI can get more complete information on the pages it decides to reads.
+
+If you use the provided character card the AI can be a little eager to do stuff on its own, you can tell the AI to hold off at the beginning of a conversation else you can try the numerous other ways to teach your AI how to use the extension.
+
+
+
 
 
 ## Key Components
