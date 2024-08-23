@@ -1,4 +1,4 @@
-# Lucid_Autonomy (upload in progress)
+# Lucid_Autonomy (an experiment in progress, not all features are documented)
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
 
 This extension was written 100% by [Mistral-Large-Instruct-2407](https://huggingface.co/mistralai/Mistral-Large-Instruct-2407) quantized to 8-bit precision with [llama.cpp](https://github.com/ggerganov/llama.cpp) locally.  The transcriptions to achieve this are presented here [RECPITS](Insertlater), they are not ordered well and some conversations lead to dead ends, however most of the errors were me misunderstanding something.  This model is great!
@@ -19,11 +19,13 @@ The model also wrote the first draft of the readme.
 9. [Contributing](#contributing)
 10. [License](#license)
 
-## Overview
+## Overview 
 
 Welcome to Lucid_Autonomy! This (still very much expeimental, and only tested on Linux, there may be directory / vs \ issues in the code on windows) extension is designed to enable a Large Language Model (LLM) to interact autonomously with a computer. It leverages various models and tools to detect objects on the screen, process images, and perform actions such as moving the mouse, clicking, typing text, and pressing keys.
 
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
+
+It is likely necessary, but not strictly so, that you use a model with a lot of context and have enough vram to support a lot of context; with a minimum of around 60k tokens. Please see below for more details and how to run the extension with less context.
 
 
 ## How the Extension Works:
@@ -77,7 +79,7 @@ https://huggingface.co/spaces/merve/owlv2
 
 and I had Mistral update the code to work offline, use a differnet model, and add more functionality.
 
-## Test your setup with your LLM using the extension, and example of how to use the extenssion.
+## Test your setup with your LLM using the extension, and example of how to use the extenssion (test with Llama-3.1-70B converted into an 8-bit .guff).
 
 The repo include a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
 
@@ -93,7 +95,7 @@ The repo include a file called "WebColorChange.html" you can run this in a web b
    ![image](https://github.com/user-attachments/assets/1927353b-ad01-4c8f-bb3d-9c5650469aa4)
 
 
-3. Begin talking with your AI, start out with:
+3. Begin inferencing with your AI, start out with:
 
    ```
    Can you autonomously change the background color until the background is red and then cease sending yourself tasks?
@@ -118,9 +120,129 @@ This is a bit slow (doing a page down for every screenshot and hoping MiniCPM wi
 
 If you use the provided character card the AI can be a little eager to do stuff on its own, you can tell the AI to hold off at the beginning of a conversation else you can try the numerous other ways to teach your AI how to use the extension.
 
+## Teaching Your AI
 
+There are several ways to "teach" your AI how to use the Lucid_Autonomy extension:
 
+1. **Use the Included Character Card File**:
+   - The repository includes a character card file that contains a detailed instruction set. This file is sent to the AI upon every back-and-forth between the user and the AI.  This character card is long...like really long; it is likely longer than it needs to be.  You will need to edit your setting.yaml file for textgen to accomidate more token than the max of 4096, I set mine to 10240 (I'm not 100% sure this is necessary, but it seems to help):
+     ```
+     prompt-default: None
+     prompt-notebook: None
+     preset: Debug-deterministic
+     max_new_tokens: 10240
+     truncation_length: 131072
+     custom_stopping_strings: '"<START_COMPRESSED_RESULTS>"'
+     character: AI
+     ```
 
+In addition, if you use the character card, you may want to change the coordinates in examples into your own coordinates.
+     
+2. **Create Your Own Character Card**:
+   - You can create your own character card by writing a block of text that contains the instructions you want the AI to follow.  Take a look at the current character card to see what is available to the model, there are more features available to the model than are what in the current character card.
+
+3. **Combine Character Card Information with In-Conversation Instructions**:
+   - You can paste the character card information into the conversation with the AI and/or use a character card. This approach allows you to provide additional context and instructions as needed.
+
+4. **Teach Your AI Step-by-Step**:
+   - You can teach your AI like a person, step by step in context. For example, you can show the AI how to move the mouse and use the trigger phrase. The AI can then build upon this knowledge to perform other tasks. This method is particularly useful for tasks that don't require complex instructions or something you want the AI to repeat.  This is how I started, I taught the AI step by step as the code was being developed making sure that the code worked and that the AI could use the tools correctly.  You may find that you need to teach your AI like a person unfamiliar with a computer, which might seem odd; but from the models I've tried LLMs seem to lack this knowledge intrinsically. However, they can grasp the logic in context.
+
+### Explore and Experiment
+
+Encourage your AI to explore and experiment with different teaching methods. You might find that a combination of approaches works best for your specific use case.
+
+## How to understand the speficis of what the extension can do and how to properly format tasks
+
+Regardless of your intent to use the character card, it is a good idea to read the entire thing to get an understanding of what the AI can do and how it should format tasks.  I will highlight some main passages here:
+
+```
+- The AI has access to the following tools: OOB_MouseClick, OOB_TextInput, OOB_SpecialKey, OOB_MouseMover, OOB_MouseMove, OOB_Delay, OOB_TakeScreenshot, OOB_PageUp, and OOB_PageDown.
+
+- OOB_MouseClick is used in the following manners:
+
+OOB_MouseClick = "image_name"
+
+OR
+
+OOB_MouseClick = Monitor_Number,x,y
+
+When the AI adds OOB_MouseClick to the task list and provides an image name from the most recent version of the compressedresults.json file it has in context (without the quotes and without a Monitor_Number), the Lucid_Autonomy extension will left click the mouse button at the x,y coordinates determined by the OWLv2 model for that "specific_image."  Thus the AI should study the compressedresutls.json file to help it make decisions about actions to take.  The  image_name “description” is the only way the AI can know which UI element to interact with.
+```
+
+```
+- Here are some tasks with reasoning between tasks, putting reasoning between tasks is not the proper format, but this is to help the AI understand how to effectively use a computer, which is ironic because the AI is a computer:
+
+Task 1: OOB_MouseClick = text bar field_17.png
+
+The first task is to click on the text bar field with the description "Search icon with microphone and settings options." This is the search bar on the Google homepage, where the AI wants to enter our search query.  This image is inside of a larger image through its "children" association in the json file, thus this is the more likely image to select even though there is another image with a similar description.
+
+Task 2: OOB_TextInput = "latest advancements in space exploration"
+
+The second task is to enter the search query "latest advancements in space exploration" into the search bar. This will allow the AI to search for information on this topic.
+
+Task 3: OOB_SpecialKey = enter
+
+The third task is to press the enter key, which will submit the search query and load the search results page.
+
+Task 4: OOB_Delay = 4000
+
+The fourth task is to wait for 4 seconds, which will give the page time to load and the search results to appear.
+
+Task 5: OOB_TakeScreenshot
+
+The fifth task is to take a screenshot of the current page, which will capture the search results and any other information on the page.
+
+Task 6: OOB_MouseClick = 0,896,2052
+
+The sixth task is to click on the textgen text input field on monitor 0, which is where the AI will enter its out-of-body message to itself.
+
+Task 7: OOB_TextInput = I just took a screenshot of the search results page for latest advancements in space exploration. I'm going to choose a link to click on and continue exploring, note any interesting information or text on the screen like a person would do if they were performing a search for information using the description for full_image.png.  If the page is not as expected I'll revaluate and choose the best set of actions. If the full_image.png description indicates I am looking the search results page I expected to be on, I'll write out detailed observations and records from the contents of the full_image.png description.  I will create a separate task list every time I wake up, and decide to continue documenting the page contents or to conclude my task is complete and cease creating a task list. I will identify my reasoning.
+
+The seventh task is to paste the out-of-body message to the AI, which will help the AI keep track of what the AI is doing and to plan the AI's next move.
+
+Task 8: OOB_SpecialKey = enter
+
+The eighth task is to press enter, which will submit the OOB_TextInput text to the textgen program, this will allow the AI to "wake up" and continue contextualizing the screenshot information against its goals so it can dynamically react to the changing screenshot information.
+
+By understanding the correct sequence of tasks and the role of the OOB_Delay, the AI can see that the OOB_TakeScreenshot task is the last action the AI will take while "awake" before the AI's turn is over. The OOB tasks are then executed while the AI is "asleep", allowing the AI to enter its out-of-body message and submit the text which will "wake up" the AI allowing it to continue exploring the page.
+```
+
+```
+Out-Of-Body (OOB) Tasks
+
+*The following information is intended to explain to the AI what Out-Of-Body (OOB) tasks are and how to use them within the context of the Lucid_Autonomy extension.
+
+- For the AI to fully comprehend how to use OOB tasks, it is important for the AI to contextualize how the user and AI inferencing execution works. The AI is operating within a framework called textgen, which allows users to run large language models (LLMs) on their personal computer hardware. When a user begins a textgen session, they are presented with the last reply from the AI. If it is a new conversation, a pre-programmed initial greeting is generated as if it came from the AI. This means that the user needs to initiate communication with the AI model.
+
+The user types their message to the AI and then sends the message (this is when the AI receives the updated screenshot information). The AI receives the message and the current screenshot information, formulates its response, and then sends the message to the user.
+
+When the AI has sent its message to the user, the AI goes into a type of sleep. The AI normally stays asleep until it receives a new message from the user. OOB tools and tasks are intended to operate when the AI is asleep.  Hence the Out-Of-Body phrasing, the tools in the task list operate outside the body of the AI, when the AI is not able to be active.
+
+- It is important for the AI to understand how to use OOB tasks and for what purposes.
+
+When given the x,y coordinates for the textgen user input text field, the AI can enter text into that field and press "enter" to submit the text to itself, replacing the role of the user with a form of "inner thought."
+
+The concept of these inner thoughts is very important for the AI to understand and leverage, because it allows the AI to "think ahead" and tell itself to do things when it wakes up from being asleep using cleverly constructed Autonomy_Task lists.
+
+While the AI is formulating a message, it may type out any type of text. The AI may then end the message with the trigger phrase (Autonomy_Tasks:) and a list of tasks; always making sure to end a message with the task list with regard to message formatting. If those tasks involve constructing an "inner thought" via the OOB_TextInput tool, then the AI should realize that these are inner thoughts intended to be sent to itself while asleep (after the AI has sent its message). The AI waits until it gets a response that is only the AI's inner thought without the context of any other text, then the AI acts upon those inner thoughts upon waking up.
+
+Upon waking up the AI will contextualize the received inner thoughts within the context of the most current screenshot information, the AI writes out descriptions of the current screenshot, the AI writes out differences between current and past screenshot description, the AI writes out how the current context and differences change the construction of a new task list if applicable.
+
+The AI will realize when a task is complete and the AI will cease to send itself inner thoughts and task lists when a task is complete.
+
+This is how the inner thoughts allow the AI to think ahead and perform tasks autonomously. They allow the AI to take actions upon waking up. When the AI wakes up, it is provided the updated compressedresults.json file information and the AI can adapt dynamically to this information autonomously. The AI can execute the inner thoughts with updated information about the screen.  The AI will take screenshots as it is a means for the AI to see if intended actions have been executed, by comparing the contents of the new screenshot to that of previous screenshot information.
+```
+
+```
+- The AI is scrolling through a webpage and takes a screenshot after each scroll. The AI should compare the current screenshot with the previous one to determine if new content has been loaded.
+
+Autonomy_Tasks:
+OOB_PageDown
+OOB_TakeScreenshot
+OOB_MouseClick = 0,896,2052
+OOB_TextInput = Inner thought: I just scrolled down the page and took a screenshot. I will continue scrolling and sending myself inner thoughts to think ahead. I will continue this process until I reach the bottom of the page while contextualizing updated page content.  When I see the contents of the new screenshot I will make a comparison between the new screenshot and the previous screenshot. I should be seeing contents of the page change from the full_image.png description.  If the page is not changing I will conclude that I have reached the bottom of the page, and cease to type out task lists, I will identify my reasoning and provide quotes from the full_image description to justify my actions.
+OOB_SpecialKey = enter
+```
 
 ## Key Components
 
@@ -200,25 +322,6 @@ Here is a screenshot of the UI:
 
 You can customize the extension by modifying the configurable variables and settings in the code. This allows you to tailor the extension to your specific needs.
 
-## Teaching Your AI
-
-There are several ways to teach your AI how to use the Lucid_Autonomy extension:
-
-1. **Use the Included Character Card File**:
-   - The repository includes a character card file that contains a detailed instruction set. This file is sent to the AI upon every back-and-forth between the user and the AI.
-
-2. **Create Your Own Character Card**:
-   - You can create your own character card by writing a block of text that contains the instructions you want the AI to follow.
-
-3. **Combine Character Card Information with In-Conversation Instructions**:
-   - You can paste the character card information into the conversation with the AI and/or use a character card. This approach allows you to provide additional context and instructions as needed.
-
-4. **Teach Your AI Step-by-Step**:
-   - You can teach your AI like a person, step by step. For example, you can show the AI how to move the mouse and use the trigger phrase. The AI can then build upon this knowledge to perform other tasks. This method is particularly useful for tasks that don't require complex instructions.
-
-### Explore and Experiment
-
-Encourage your AI to explore and experiment with different teaching methods. You might find that a combination of approaches works best for your specific use case.
 
 ## Examples
 
@@ -271,3 +374,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 Please review this README and let me know if you'd like to make any further changes or additions.
+
+Tips:
+- I've found that for the model to active the window with the mouse to page down, that just telling the model that 1,0,0 (monitor 1, x=0, y=0) is where it needs to click to activate the full screen web browser.
+- Change the example coordinates from the character card into your own coordinates, this way the AI can recall them better.
