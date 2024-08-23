@@ -10,7 +10,7 @@ The model also wrote the first draft of the readme.
 ## Table of Contents
 1. [Overview](#overview)
 2. [How the Extension Works](#how-the-extension-works)
-3. [Features](#features)
+3. [Context Memory Management](#Context-Memory-Management)
 4. [Installation](#installation)
 5. [Usage](#usage)
 6. [Configuration](#configuration)
