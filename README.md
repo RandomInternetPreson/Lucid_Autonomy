@@ -12,9 +12,9 @@ The model also wrote the first draft of the readme.
 2. [How the Extension Works](#how-the-extension-works)
 3. [Test your setup before involving your LLM](#Test-your-setup-before-involving-your-LLM)
 4. [Test your setup with your LLM using the extension, and example of how to use the extension](#test-your-setup-with-your-llm-using-the-extension-and-example-of-how-to-use-the-extension-test-with-llama-31-70b-converted-into-an-8-bit-guff)
-5. [Usage](#usage)
-6. [Configuration](#configuration)
-7. [Teaching Your AI](#teaching-your-ai)
+5. [Teaching Your AI](#teaching-your-ai)
+6. [Understanding the speficificss of how the extension works](#how-to-understand-the-specifics-of-what-the-extension-can-do-and-how-to-properly-format-tasks)
+7. [Configure Settings](#tconfigure-settings)
 8. [Examples](#examples)
 9. [Contributing](#contributing)
 10. [License](#license)
@@ -41,6 +41,13 @@ The cropped image names, coordinates (as well as coordinate child elements), and
 The AI uses these data to make decisions about what to do, and where to move the mouse and enter text.
 
 Please read the contents of this repo to fully understand how to use the extension.
+
+### Workflow
+
+1. **Capture Screenshot**: The AI captures a screenshot of the specified monitor.
+2. **Object Detection**: The Owlv2 model detects objects based on text queries.
+3. **Image Processing**: The MiniCPM model processes the detected objects and generates descriptions.
+4. **Task Execution**: The AI executes tasks based on the LLM's output.
 
 ### Context Memory Management
 
@@ -269,121 +276,22 @@ Here is a screenshot of the UI:
 ![image](https://github.com/user-attachments/assets/cbacbfde-bbf9-454f-aa15-ed5ffefcccc6)
 
      
-   - **Score Threshold**: Set the score threshold for filtering low-probability predictions.
-   - **Vision Model Question**: Enter the question to ask the vision model for cropped images.
-   - **Full Image Vision Model Question**: Enter the question to ask the vision model for the full image.
-
-   - **Take Screenshot**:
-   - Click the "Take Screenshot" button to capture a screenshot and process it.
+   - **Score Threshold**: Set the score threshold for filtering probability predictions.
+   - **Vision Model Question**: Enter the question to ask the MiniCPM vision model for cropped images.
+   - **Full Image Vision Model Question**: Enter the question to ask the MiniCPM vision model for the full image description.
+   - **Take Screenshot**: Click the "Take Screenshot" button to capture a screenshot and process it.
 
 
-## Key Components
-
-### Models
-- **Owlv2 Model**: Used for object detection based on text queries.
-- **MiniCPM-Llama3 Model**: Used for processing images and generating descriptions.
-
-### Tools
-- **Gradio Interface**: Provides a user interface for configuring and triggering actions.
-- **PyAutoGUI**: Used for automating mouse and keyboard actions.
-- **Screeninfo**: Used for getting information about connected monitors.
-
-### Functions
-- **take_screenshot**: Captures a screenshot of a specified monitor.
-- **query_image**: Processes the screenshot using the Owlv2 model to detect objects.
-- **crop_images**: Crops out detected objects and processes them with the MiniCPM model.
-- **process_with_vision_model**: Processes images with the MiniCPM model and returns descriptions.
-- **execute_tasks**: Executes tasks listed in the LLM's output, such as moving the mouse, clicking, typing text, and pressing keys.
-- **execute_oob_tasks**: Executes out-of-band (OOB) tasks after a delay.
-
-## Features
-
-- **Object Detection**: Detects objects on the screen based on text queries.
-- **Image Processing**: Processes images and generates descriptions.
-- **Automation**: Automates mouse and keyboard actions.
-- **Task Execution**: Executes tasks based on LLM output.
-- **Integration**: Seamlessly integrates with the textgen ecosystem.
-
-
-
-
-
-### Workflow
-
-1. **Capture Screenshot**: The AI captures a screenshot of the specified monitor.
-2. **Object Detection**: The Owlv2 model detects objects based on text queries.
-3. **Image Processing**: The MiniCPM model processes the detected objects and generates descriptions.
-4. **Task Execution**: The AI executes tasks based on the LLM's output.
-
-## Configuration
-
-### Configurable Variables
-
-- **MONITOR_INDEX**: Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.).
-- **TEXT_QUERIES**: Comma-separated text queries for object detection.
-- **SCORE_THRESHOLD**: Score threshold for filtering low-probability predictions.
-- **VISION_MODEL_QUESTION**: Question to ask the vision model for cropped images.
-- **FULL_IMAGE_VISION_MODEL_QUESTION**: Question to ask the vision model for the full image.
-
-### Customization
-
-You can customize the extension by modifying the configurable variables and settings in the code. This allows you to tailor the extension to your specific needs.
-
-
-## Examples
-
-### Example 1: Moving the Mouse
-
-1. **Teach the AI to Move the Mouse**:
-   - Instruct the AI to move the mouse to a specific location on the screen.
-   - Use the trigger phrase "MouseMover = image_name" to execute the task.
-
-2. **AI's Response**:
-   - The AI will move the mouse to the center of the box that defines the image.
-
-### Example 2: Clicking a Button
-
-1. **Teach the AI to Click a Button**:
-   - Instruct the AI to click a button on the screen.
-   - Use the trigger phrase "MouseClick = image_name" to execute the task.
-
-2. **AI's Response**:
-   - The AI will move the mouse to the center of the box that defines the image and perform a left click.
-
-### Example 3: Typing Text
-
-1. **Teach the AI to Type Text**:
-   - Instruct the AI to type a specific text.
-   - Use the trigger phrase "TextInput = text" to execute the task.
-
-2. **AI's Response**:
-   - The AI will type the specified text, replacing "/n" with newline characters.
-
-## Contributing
-
-We welcome contributions from the community! If you have any ideas, suggestions, or bug reports, please feel free to open an issue or submit a pull request.
-
-### Guidelines
-
-1. **Fork the Repository**:
-   - Fork the repository and create a new branch for your changes.
-
-2. **Make Your Changes**:
-   - Make your changes and ensure that they are well-documented.
-
-3. **Submit a Pull Request**:
-   - Submit a pull request with a clear description of your changes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
-
----
-
-Please review this README and let me know if you'd like to make any further changes or additions.
 
 Tips:
 - I've found that for the model to active the window with the mouse to page down, that just telling the model that 1,0,0 (monitor 1, x=0, y=0) is where it needs to click to activate the full screen web browser.
 - Change the example coordinates from the character card into your own coordinates, this way the AI can recall them better.
 - Some AIs do not need to send themselves inner thoughts, they can just click the generate button on their own and keep on doing things, however this behaior seems less stable?
 - I know models are not conscious, it is just easier to anthropomorphize them sometimes to integrate them with the extension.  You will find that different AIs get tripped up on the most odd logic, showing how much they do not "reason" or how alien “their” logic is.
+- You can customize the extension by modifying the configurable variables and settings in the code. This allows you to tailor the extension to your specific needs.
+
+- ## Contributing
+
+Feel free to improve the code, I'll be working on better instructions (shorter more concise) and exploring differnet vision model options.
+
+Please consider contributing to oobabooga, they provide a valuable tool to the community :3
