@@ -26,9 +26,9 @@ Welcome to Lucid_Autonomy! This (still very much expeimental, and only tested on
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
 
-The extension works thusly,
+## How the Extension Works:
 
-A screenshot is taken (either by the user or by the AI), the screenshot is sent to [owlv2-base-patch16-ensemble](https://huggingface.co/google/owlv2-base-patch16-ensemble), the owlv2 model identifies all of the UI elements of interest in the extension UI field.
+A screenshot is taken (either by the user or by the AI), the screenshot is sent to [owlv2-base-patch16-ensemble](https://huggingface.co/google/owlv2-base-patch16-ensemble) (you can try the other owlv2 models, this one seemed the best), the owlv2 model identifies all of the UI elements of interest in the extension UI field.
 
 The owlv2 model provides the lower left and upper right boundary boxes for the UI elements.  These boxes are cropped out of the screenshot and sent to [MiniCPM-V-2_6](https://huggingface.co/openbmb/MiniCPM-V-2_6) (the 4-bit version will work too).  The MiniCPM model is instructed to provide a description of each cropped image.  The instructions are provided in the extension UI field.
 
@@ -51,6 +51,41 @@ To optimize GPU usage, the extension loads and unloads vision models as needed. 
 ### Dual Screen Setup
 
 For the best experience, it is recommended to use a dual-screen setup. This allows the textgen UI to run on one screen while the AI interacts with the UI on the other screen. This separation helps in monitoring the AI's actions and providing clear instructions.  If you only have one screen, it is best to cover the textgen UI with an "always on top" notpad or something so the AI isn't reading its text twice essentially.
+
+## Test your setup before involing your LLM
+
+It is important to troubleshoot and understand what the owl2 model can "see" how the threashold values affect the results and such.  I would consider a threashold value of 0.1 low and a value of 0.3 high, with 0.24 being good for most casses.
+
+To do this run the app.py file via the terminal link in the textgen directory for your operating system, for linux it is cmd_linux.sh for example.
+
+With the terminal open run (no quotes in directory name)
+
+```
+cd "the Lucid_Autonomy extenssion directory"
+python app.py
+```
+
+This will yeild the following ui via a hyperlink:
+
+![image](https://github.com/user-attachments/assets/81b13353-2e91-4b39-9e9e-c260595826f7)
+
+here you can test out screenshots you take manually using different descriptors and threshold values.  
+
+The code for this was originally gotten from here: 
+
+https://huggingface.co/spaces/merve/owlv2
+
+and I had Mistral update the code to work offline, use a differnet model, and add more functionality.
+
+## Test your setup with your LLM using the extension
+
+The repo include a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
+
+1. Run the the WebColorChange web page:
+![image](https://github.com/user-attachments/assets/f8399cc1-f846-4e8f-9317-97fd2dbcbe5e)
+
+2. 
+
 
 ## Key Components
 
