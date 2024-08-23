@@ -77,7 +77,7 @@ https://huggingface.co/spaces/merve/owlv2
 
 and I had Mistral update the code to work offline, use a differnet model, and add more functionality.
 
-## Test your setup with your LLM using the extension
+## Test your setup with your LLM using the extension, and example of how to use the extenssion.
 
 The repo include a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
 
