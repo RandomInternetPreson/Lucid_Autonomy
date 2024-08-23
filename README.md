@@ -9,7 +9,7 @@ The model also wrote the first draft of the readme.
 
 ## Table of Contents
 1. [Overview](#overview)
-2. [Key Components](#key-components)
+2. [How the Extension Works](#how-the-extension-works)
 3. [Features](#features)
 4. [Installation](#installation)
 5. [Usage](#usage)
