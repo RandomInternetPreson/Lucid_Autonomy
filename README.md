@@ -15,9 +15,8 @@ The model also wrote the first draft of the readme.
 5. [Teaching Your AI](#teaching-your-ai)
 6. [Understanding the speficificss of how the extension works](#how-to-understand-the-specifics-of-what-the-extension-can-do-and-how-to-properly-format-tasks)
 7. [Configure Settings](#tconfigure-settings)
-8. [Examples](#examples)
-9. [Contributing](#contributing)
-10. [License](#license)
+9. [Tips](#Tips)
+10. [Contributing](#Contributing)
 
 # Overview 
 
@@ -283,7 +282,7 @@ Here is a screenshot of the UI:
 
 
 
-Tips:
+# Tips:
 - I've found that for the model to active the window with the mouse to page down, that just telling the model that 1,0,0 (monitor 1, x=0, y=0) is where it needs to click to activate the full screen web browser.
 - Change the example coordinates from the character card into your own coordinates, this way the AI can recall them better.
 - Some AIs do not need to send themselves inner thoughts, they can just click the generate button on their own and keep on doing things, however this behaior seems less stable?
