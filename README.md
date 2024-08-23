@@ -21,7 +21,7 @@ The model also wrote the first draft of the readme.
 
 ## Overview
 
-Welcome to Lucid_Autonomy! This (still very much expeimental) extension is designed to enable a Large Language Model (LLM) to interact autonomously with a computer. It leverages various models and tools to detect objects on the screen, process images, and perform actions such as moving the mouse, clicking, typing text, and pressing keys.
+Welcome to Lucid_Autonomy! This (still very much expeimental, and only tested on Linux, there may be directory / vs \ issues in the code on windows) extension is designed to enable a Large Language Model (LLM) to interact autonomously with a computer. It leverages various models and tools to detect objects on the screen, process images, and perform actions such as moving the mouse, clicking, typing text, and pressing keys.
 
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
@@ -66,16 +66,23 @@ For the best experience, it is recommended to use a dual-screen setup. This allo
 
 Download the version of MiniCPM-V-2_6 that works for you [Normal Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6) or [4-bit Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6-int4), (this code was developed around v2_5 but 2_6 just came out and seems to function better).
 
-Edit the script.py file with the directory of your downloaded model:
+Edit the script.py file VISION_MODEL_ID variable in any text editor with the directory of your downloaded model:
 
 ![image](https://github.com/user-attachments/assets/b120b6ab-92cf-4d1a-890c-ec71ff26c0fb)
 
 ```
 VISION_MODEL_ID = "enter your directory here"
 ```
+Here is a screenshot of the UI:
 
-   - **Monitor Index**: Select the monitor to capture.
-   - **Text Queries**: Enter comma-separated text queries for object detection.
+![image](https://github.com/user-attachments/assets/79aea1fd-719b-49ec-acb0-75283afb99ad)
+
+   - **Monitor Index**: Select the monitor to capture. Change default in code if you are having issues.
+   - **Text Queries**: Enter comma-separated text queries for object detection.  Do not allow for spaces before or after commas.  This is the query that is going be sent to the OWLv2 Model.  This model has a very interesting prompting style that has a lot of potential.  For example adding "x" without the qutoes, in the list of text queires and a low threahold value of 0.1 will find all the close window Xs, similarily searcing for "speech bubble" with a low threashold value of 0.1 will find all of the reply icons on a reddit page.
+
+![image](https://github.com/user-attachments/assets/cbacbfde-bbf9-454f-aa15-ed5ffefcccc6)
+
+     
    - **Score Threshold**: Set the score threshold for filtering low-probability predictions.
    - **Vision Model Question**: Enter the question to ask the vision model for cropped images.
    - **Full Image Vision Model Question**: Enter the question to ask the vision model for the full image.
