@@ -25,13 +25,32 @@ Welcome to Lucid_Autonomy! This (still very much expeimental, and only tested on
 
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
+
+The extension works thusly,
+
+A screenshot is taken (either by the user or by the AI), the screenshot is sent to [owlv2-base-patch16-ensemble](https://huggingface.co/google/owlv2-base-patch16-ensemble), the owlv2 model identifies all of the UI elements of interest in the extension UI field.
+
+The owlv2 model provides the lower left and upper right boundary boxes for the UI elements.  These boxes are cropped out of the screenshot and sent to [MiniCPM-V-2_6](https://huggingface.co/openbmb/MiniCPM-V-2_6) (the 4-bit version will work too).  The MiniCPM model is instructed to provide a description of each cropped image.  The instructions are provided in the extension UI field.
+
+In addition to the UI element identification, the extension also has MiniCPM describe the entire screen. The instructions are provided in the extension UI field.
+
+The cropped image names, coordinates (as well as coordinainte child elements), and descriptions are entered into a constantly updating json file.  The contents of this file are sent to your LLM of choice, with the coordinates omitted (looking into chaning this).
+
+The AI uses these data to make decisions about what to do, and where to move the mouse and enter text.
+
+Please read the contents of this repo to fully understand how to use the extension.
+
+### Context Memory Management
+
+The log file is edited upon every interaction from the user and AI, it keeps up to 2 copies of json information about the screen and UI elemements.  This means the AI does not retain the json information permenanently, the AI needs to type text outside of the json bookend characters to retain information in context.
+
 ### GPU Utilization
 
-To optimize GPU usage, the extension loads and unloads vision models as needed. This helps manage VRAM utilization, ensuring that the system remains responsive even when running multiple tasks.
+To optimize GPU usage, the extension loads and unloads vision models as needed. This helps manage VRAM utilization, ensuring that the system remains responsive even when running multiple tasks.  (yes, the model loads and unloads one extra time for right now, will fix later)
 
 ### Dual Screen Setup
 
-For the best experience, it is recommended to use a dual-screen setup. This allows the textgen UI to run on one screen while the AI interacts with the UI on the other screen. This separation helps in monitoring the AI's actions and providing clear instructions.
+For the best experience, it is recommended to use a dual-screen setup. This allows the textgen UI to run on one screen while the AI interacts with the UI on the other screen. This separation helps in monitoring the AI's actions and providing clear instructions.  If you only have one screen, it is best to cover the textgen UI with an "always on top" notpad or something so the AI isn't reading its text twice essentially.
 
 ## Key Components
 
