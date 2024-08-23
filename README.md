@@ -11,7 +11,7 @@ The model also wrote the first draft of the readme.
 1. [Overview](#overview)
 2. [How the Extension Works](#how-the-extension-works)
 3. [Test your setup before involving your LLM](#Test-your-setup-before-involving-your-LLM)
-4. [Test your setup with your LLM using the extension, and example of how to use the extension (test with Llama-3.1-70B converted into an 8-bit .guff)](#installation)
+4. [Test your setup with your LLM using the extension, and example of how to use the extension](#test-your-setup-with-your-llm-using-the-extension-and-example-of-how-to-use-the-extension-test-with-llama-31-70b-converted-into-an-8-bit-guff)
 5. [Usage](#usage)
 6. [Configuration](#configuration)
 7. [Teaching Your AI](#teaching-your-ai)
