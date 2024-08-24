@@ -1,6 +1,6 @@
 # Lucid_Autonomy (an experiment in progress, not all features are documented)
 
-### small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
+#### Small bug right now, you need to hard code which monitor the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
 
 In the script.py file change the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
 ```
@@ -275,7 +275,7 @@ OOB_SpecialKey = enter
 
 Download the version of MiniCPM-V-2_6 that works for you [Normal Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6) or [4-bit Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6-int4), (this code was developed around v2_5 but 2_6 just came out and seems to function better).
 
-# small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
+#### Small bug right now, you need to hard code which monitor the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
 
 In the script.py file change the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
 ```
