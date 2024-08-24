@@ -292,6 +292,7 @@ Here is a screenshot of the UI:
 - I know models are not conscious, it is just easier to anthropomorphize them sometimes to integrate them with the extension.  You will find that different AIs get tripped up on the most odd logic, showing how much they do not "reason" or how alien “their” logic is.
 - You can customize the extension by modifying the configurable variables and settings in the code. This allows you to tailor the extension to your specific needs.
 - There is still a lot of functionality I'm going to add, such as double clicking, and I haven't fully explored all the tools myself.  But this is a place I can better update and organize my results and code.
+- There is a lot of vestigial code that I need to remove. Will do later.
 
 - ## Contributing
 
