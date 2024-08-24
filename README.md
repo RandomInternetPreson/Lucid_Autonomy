@@ -14,6 +14,14 @@ This extension was written 100% by [Mistral-Large-Instruct-2407](https://hugging
 
 The model also wrote the first draft of the readme. 
 
+#### todo:
+- add double click
+- integrate lucid vision multi model selection seheme
+- integrate lucid websearch for AI to utilize on its own
+- develop better "spatial awarness" json scheme, I have several ideas on how to contextualize the UI element spatial data better in the json file, the current method is just okay
+- try out copy all and past all techniques for quick text input into model
+- try out dual models clicking into each others text fields and communicating
+
 # Lucid_Autonomy
 
 ## Table of Contents
