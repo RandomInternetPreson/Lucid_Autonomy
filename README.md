@@ -1,6 +1,6 @@
 # Lucid_Autonomy (an experiment in progress, not all features are documented)
 
-# small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
+### small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
 
 In the script.py file chnage the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
 ```
