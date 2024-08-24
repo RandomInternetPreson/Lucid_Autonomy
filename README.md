@@ -1,4 +1,13 @@
 # Lucid_Autonomy (an experiment in progress, not all features are documented)
+
+# small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
+
+In the script.py file chnage the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
+```
+# Configurable variables
+MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
+```
+
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
 
 This extension was written 100% by [Mistral-Large-Instruct-2407](https://huggingface.co/mistralai/Mistral-Large-Instruct-2407) quantized to 8-bit precision with [llama.cpp](https://github.com/ggerganov/llama.cpp) locally.  The transcriptions to achieve this are presented here [RECEIPTS](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/Receipts), they are not ordered well and some conversations lead to dead ends, however most of the errors were me misunderstanding something.  This model is great!
@@ -265,6 +274,14 @@ OOB_SpecialKey = enter
 # Configure Settings
 
 Download the version of MiniCPM-V-2_6 that works for you [Normal Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6) or [4-bit Precision](https://huggingface.co/openbmb/MiniCPM-V-2_6-int4), (this code was developed around v2_5 but 2_6 just came out and seems to function better).
+
+# small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
+
+In the script.py file chnage the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
+```
+# Configurable variables
+MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
+```
 
 Edit the script.py file VISION_MODEL_ID variable in any text editor with the directory of your downloaded model:
 
