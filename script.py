@@ -30,7 +30,7 @@ FULL_IMAGE_VISION_MODEL_QUESTION = "This is a computer screenshot, identify all 
 #else:
  #   device = torch.device("cpu")
  
-device = 1
+device = 0
 
 # Global variables for models
 owlv2_model = None
