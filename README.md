@@ -24,7 +24,9 @@ Welcome to Lucid_Autonomy! This (still very much experimental, and only tested o
 
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
-It is likely necessary, but not strictly so, that you use a model with a lot of context and have enough vram to support a lot of context; with a minimum of around 60k tokens. Please see below for more details, and information on how to run the extension with less context.
+If you use the included AI character card you will need a model with a lot of context and have enough vram to support a lot of context; with a minimum of around 60k tokens. 
+
+You can teach in context and/or create your own character card with far smaller context requriements; discussed below.
 
 
 # How the Extension Works
