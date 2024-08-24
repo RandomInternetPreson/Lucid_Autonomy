@@ -24,7 +24,7 @@ Welcome to Lucid_Autonomy! This (still very much experimental, and only tested o
 
 The extension is designed to work within the text-generation-webui ecosystem, a powerful web-based interface for running large language models locally. It enhances the capabilities of Oobabooga's [text-generation-webui](https://github.com/oobabooga/text-generation-webui) by allowing the LLM to interact with the user's computer, effectively giving it the ability to perform tasks that would otherwise require human intervention.
 
-It is likely necessary, but not strictly so, that you use a model with a lot of context and have enough vram to support a lot of context; with a minimum of around 60k tokens. Please see below for more details and how to run the extension with less context.
+It is likely necessary, but not strictly so, that you use a model with a lot of context and have enough vram to support a lot of context; with a minimum of around 60k tokens. Please see below for more details, and information on how to run the extension with less context.
 
 
 # How the Extension Works
@@ -46,11 +46,11 @@ Please read the contents of this repo to fully understand how to use the extensi
 1. **Capture Screenshot**: The AI captures a screenshot of the specified monitor.
 2. **Object Detection**: The Owlv2 model detects objects based on text queries.
 3. **Image Processing**: The MiniCPM model processes the detected objects and generates descriptions.
-4. **Task Execution**: The AI executes tasks based on the LLM's output.
+4. **Task Execution**: The AI executes tasks based on the vision model outputs.
 
 ### Context Memory Management
 
-The log file is edited upon every interaction from the user and AI, it keeps up to 2 copies of json information about the screen and UI elements.  This means the AI does not retain the json information permanently, the AI needs to type text outside of the json bookend characters to retain information in context.
+The log file is edited upon every interaction from the user and AI, it keeps up to 2 copies of json information about the screen and UI elements.  This means the AI does not retain the json information permanently, the AI needs to type text outside of the json bookend characters to retain information in context.  Install the Model Ducking extension if you only have one gpu or want to offload your model while the vision models work https://github.com/BoredBrownBear/text-generation-webui-model_ducking
 
 ### GPU Utilization
 
@@ -87,7 +87,7 @@ and I had Mistral update the code to work offline, use a different model, and ad
 
 # Test your setup with your LLM using the extension, and example of how to use the extension (test with Llama-3.1-70B converted into an 8-bit .guff)
 
-The repo include a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
+The repo includes a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors (through a finite list of colors) when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
 
 1. Run the the WebColorChange web page:
 ![image](https://github.com/user-attachments/assets/f8399cc1-f846-4e8f-9317-97fd2dbcbe5e)
@@ -96,7 +96,7 @@ The repo include a file called "WebColorChange.html" you can run this in a web b
    - screenshot.png is the original screenshot
    - Human_annotated_image.png has red boxes around everything that owlv2 detected, this is good to have open and let auto refresh upon every consecutive screenshot so you can see what is going on.
    - annotated_image.png is the png that is cropped for every box and sent to the MiniCPM model (I will remove these duplicates later)
-   - ImageOutputTest is a folder that gets updated upon every screenshot that has the cropped images and json files.  Depending in how many images there are and what you are having MiniCPM do, this could take a while.
+   - ImageOutputTest is a folder that gets updated upon every screenshot that has the cropped images and json files.  Depending on how many images there are and what you are having MiniCPM do, this could take a while.
      
    ![image](https://github.com/user-attachments/assets/0ec35a76-4996-4c75-8c07-495ddedbe148)
 
@@ -112,7 +112,7 @@ The repo include a file called "WebColorChange.html" you can run this in a web b
 
    0,896,2052 takes you to the text input field for the textgen software we are running, this is where you can click to paste your inner thoughts to progress through the objective autonomously
    ```
-   The AI can choose pictures to click on, and it can also use coordinates.  0,896,2052 is monitor=0, x=896, y=2052  The coordinates I provided the AI are for my setup, you need to figure out where pertientn UI elements are for your setup.  To do this I use XnView https://www.xnview.com/en/ and view screenshots in the image viewer, UI shows the x,y coordinates on the screen, most image viewers will tell you the x,y coordinates.  Being able to tell the AI where pertinent UI features are is useful.
+   The AI can choose pictures to click on, and it can also use coordinates.  0,896,2052 is monitor=0, x=896, y=2052  The coordinates I provided the AI are for my setup, you need to figure out where pertinent UI elements are for your setup.  To do this I use XnView https://www.xnview.com/en/ and view screenshots in the image viewer, the UI shows the x,y coordinates on the screen, most image viewers will tell you the x,y coordinates.  Being able to tell the AI where pertinent UI features are is useful.
 
 4. Here is an example of the AI's response:
 
@@ -148,13 +148,13 @@ There are several ways to "teach" your AI how to use the Lucid_Autonomy extensio
 
 '"<START_COMPRESSED_RESULTS>" is the beginning of the bookend text that straddles the json data inside the chat log, sometimes models want to print it out, not often but sometimes.  In addition, if you use the character card, you may want to change the coordinates in examples into your own coordinates.
      
-2. **Create Your Own Character Card**:
+2. **Create Your Own Character Card - can be good for less context too**:
    - You can create your own character card by writing a block of text that contains the instructions you want the AI to follow.  Take a look at the current character card to see what is available to the model, there are more features available to the model than are what in the current character card.
 
-3. **Combine Character Card Information with In-Conversation Instructions**:
+3. **Combine Character Card Information with In-Conversation Instructions - can be good for less context too**:
    - You can paste the character card information into the conversation with the AI and/or use a character card. This approach allows you to provide additional context and instructions as needed.
 
-4. **Teach Your AI Step-by-Step**:
+4. **Teach Your AI Step-by-Step - can be good for less context too**:
    - You can teach your AI like a person, step by step in context. For example, you can show the AI how to move the mouse and use the trigger phrase. The AI can then build upon this knowledge to perform other tasks. This method is particularly useful for tasks that don't require complex instructions or something you want the AI to repeat.  This is how I started, I taught the AI step by step as the code was being developed making sure that the code worked and that the AI could use the tools correctly.  You may find that you need to teach your AI like a person unfamiliar with a computer, which might seem odd; but from the models I've tried LLMs seem to lack this knowledge intrinsically. However, they can grasp the logic in context.
 
 ### Explore and Experiment
@@ -163,7 +163,7 @@ Encourage your AI to explore and experiment with different teaching methods. You
 
 # How to understand the specifics of what the extension can do and how to properly format tasks
 
-Regardless of your intent to use the character card, it is a good idea to read the entire thing to get an understanding of what the AI can do and how it should format tasks.  I will highlight some main passages here:
+Regardless of your intent to use the included "AI" character card, it is a good idea to read the entire thing to get an understanding of what the AI can do and how it should format tasks.  I will highlight some main passages here:
 
 ```
 - The AI has access to the following tools: OOB_MouseClick, OOB_TextInput, OOB_SpecialKey, OOB_MouseMover, OOB_MouseMove, OOB_Delay, OOB_TakeScreenshot, OOB_PageUp, and OOB_PageDown.
@@ -270,7 +270,8 @@ Here is a screenshot of the UI:
 ![image](https://github.com/user-attachments/assets/79aea1fd-719b-49ec-acb0-75283afb99ad)
 
    - **Monitor Index**: Select the monitor to capture. Change default in code if you are having issues.
-   - **Text Queries**: Enter comma-separated text queries for object detection.  Do not allow for spaces before or after commas.  This is the query that is going be sent to the OWLv2 Model.  This model has a very interesting prompting style that has a lot of potential.  For example adding "x" without the qutoes, in the list of text queires and a low threahold value of 0.1 will find all the close window Xs, similarily searcing for "speech bubble" with a low threashold value of 0.1 will find all of the reply icons on a reddit page.
+   - **Text Queries**: Enter comma-separated text queries for object detection.  Do not allow for spaces before or after commas.  This is the query that is going be sent to the OWLv2 Model.  This model has a very interesting prompting style that has a lot of potential.  For example adding "x" without the qutoes, in the list of text queires and a low threahold value of 0.1 will find all the close window Xs, similarily searcing for "speech bubble" with a low threshold value of 0.1 will find all of the reply icons on a reddit page.
+     * It should be noted however, that decreasing the threshold increases the number of UI elements seen by the owl model which will slow things down.
 
 ![image](https://github.com/user-attachments/assets/cbacbfde-bbf9-454f-aa15-ed5ffefcccc6)
 
@@ -283,11 +284,12 @@ Here is a screenshot of the UI:
 
 
 # Tips:
-- I've found that for the model to active the window with the mouse to page down, that just telling the model that 1,0,0 (monitor 1, x=0, y=0) is where it needs to click to activate the full screen web browser.
+- I've found that for the model to active the window with the mouse to page down, that just simple to tell the model that 1,0,0 (monitor 1, x=0, y=0) is where it needs to click to activate the full screen web browser.
 - Change the example coordinates from the character card into your own coordinates, this way the AI can recall them better.
 - Some AIs do not need to send themselves inner thoughts, they can just click the generate button on their own and keep on doing things, however this behaior seems less stable?
 - I know models are not conscious, it is just easier to anthropomorphize them sometimes to integrate them with the extension.  You will find that different AIs get tripped up on the most odd logic, showing how much they do not "reason" or how alien “their” logic is.
 - You can customize the extension by modifying the configurable variables and settings in the code. This allows you to tailor the extension to your specific needs.
+- There is still a lot of functionality I'm going to add, such as double clicking, and I haven't fully explored all the tools myself.  But this is a place I can better update and organize my results and code.
 
 - ## Contributing
 
