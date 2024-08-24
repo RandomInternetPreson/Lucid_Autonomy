@@ -2,7 +2,7 @@
 
 ### small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
 
-In the script.py file chnage the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
+In the script.py file change the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
 ```
 # Configurable variables
 MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
@@ -277,7 +277,7 @@ Download the version of MiniCPM-V-2_6 that works for you [Normal Precision](http
 
 # small bug right now, you need to hard code which monitor you want to be the one the LLM has control over.  The change to the monitor in the Lucid_Autonomy extension UI element in textgen will not correctly be applied to the LLM moving the mouse. 
 
-In the script.py file chnage the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
+In the script.py file change the MONITOR_INDEX value to the monitor you want the LLM to control, for me my main monitor is 0 and my smaller monitor is 1.
 ```
 # Configurable variables
 MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
