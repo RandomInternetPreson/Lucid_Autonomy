@@ -58,6 +58,12 @@ The log file is edited upon every interaction from the user and AI, it keeps up 
 
 To optimize GPU usage, the extension loads and unloads vision models as needed. This helps manage VRAM utilization, ensuring that the system remains responsive even when running multiple tasks.  (yes, the model loads and unloads one extra time for right now, will fix later)
 
+You can change the gpu you want the model to load on by changing the value of device near the topish of the code:
+
+```
+device = 0
+```
+
 ### Dual Screen Setup
 
 For the best experience, it is recommended to use a dual-screen setup. This allows the textgen UI to run on one screen while the AI interacts with the UI on the other screen. This separation helps in monitoring the AI's actions and providing clear instructions.  If you only have one screen, it is best to cover the textgen UI with an "always on top" notepad or something so the AI isn't reading its text twice essentially.
