@@ -7,6 +7,11 @@ In the script.py file change the MONITOR_INDEX value to the monitor you want the
 # Configurable variables
 MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
 ```
+Updates coming! 
+
+![image](https://github.com/user-attachments/assets/b4a56678-0153-4e9b-9ff6-066b28c84123)
+
+
 
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
 
