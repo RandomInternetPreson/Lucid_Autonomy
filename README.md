@@ -14,13 +14,20 @@ Updates coming!
 ![image](https://github.com/user-attachments/assets/6d2871b1-b512-41d6-88e6-e72b3b2576c1)
 ![image](https://github.com/user-attachments/assets/a26ee978-9cf8-46e2-97cf-9c41ed8023a7)
 
-Why go process with so many models?
+Why process with so many models?
 
 Let's look at an example of a bar chart where both GOT-OCR and Marker fail in reproducing the data from the chart:
 
+OG Barchart
 ![image](https://github.com/user-attachments/assets/fefc53fc-8dbc-48ea-b3a0-bea91baf9363)
+
+GOT-OCR output:
 ![image](https://github.com/user-attachments/assets/fa18d368-c03f-4057-8b87-b9f5def57561)
+
+Marker output:
 ![image](https://github.com/user-attachments/assets/bc8f59c3-a360-4d0a-88bc-f4da08bbc865)
+
+LLM Asking ChartGemma:
 ![image](https://github.com/user-attachments/assets/1ee8d739-0659-47ff-abe5-651dc738c63c)
 
 
