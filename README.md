@@ -11,6 +11,10 @@ Updates coming!
 
 ![image](https://github.com/user-attachments/assets/b4a56678-0153-4e9b-9ff6-066b28c84123)
 
+![image](https://github.com/user-attachments/assets/6d2871b1-b512-41d6-88e6-e72b3b2576c1)
+![image](https://github.com/user-attachments/assets/a26ee978-9cf8-46e2-97cf-9c41ed8023a7)
+
+
 
 
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
