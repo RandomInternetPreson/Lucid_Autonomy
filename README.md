@@ -28,7 +28,8 @@ Marker output:
 ![image](https://github.com/user-attachments/assets/bc8f59c3-a360-4d0a-88bc-f4da08bbc865)
 
 LLM Asking ChartGemma:
-![image](https://github.com/user-attachments/assets/1ee8d739-0659-47ff-abe5-651dc738c63c)
+![image](https://github.com/user-attachments/assets/302b7460-4165-42c0-98f0-3dd450967b7c)
+
 
 
 
