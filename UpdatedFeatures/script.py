@@ -1,3 +1,5 @@
+CUDA_VISIBLE_DEVICES=0
+
 import gradio as gr
 import json
 import pyautogui
@@ -11,10 +13,29 @@ import re  # Import the re module for regular expression operations
 import json
 import time
 import threading
-
+import pdf2image  # Add this import for PDF to PNG conversion
+import uuid
+import tempfile
+import time
+import shutil
+from pathlib import Path
 import time
 import pypdfium2  # Needs to be at the top to avoid warnings
 import os
+import gradio as gr
+import spaces
+from transformers import AutoModel, AutoTokenizer
+from PIL import Image
+import numpy as np
+import os
+import base64
+import io
+import uuid
+import tempfile
+import subprocess
+import time
+import shutil
+from pathlib import Path
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"  # For some reason, transformers decided to use .isin for a simple op, which is not supported on MPS
 
 from marker.convert import convert_single_pdf
@@ -43,8 +64,11 @@ minicpm_llama_model = None
 minicpm_llama_tokenizer = None
 chartgemma_model = None
 chartgemma_processor = None
+got_ocr_model = None
+got_ocr_tokenizer = None
 
 VISION_MODEL_ID = "/home/myself/Desktop/miniCPM_llava3V/MiniCPM-V-2_6/"
+GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
 
 # Global variable to store the file path of the selected image
 selected_image_path = None
@@ -194,6 +218,20 @@ def unload_chartgemma_model():
         del chartgemma_processor
         torch.cuda.empty_cache()
         print("ChartGemma model unloaded.")
+
+def load_got_ocr_model():
+    global got_ocr_model, got_ocr_tokenizer
+    got_ocr_model = AutoModel.from_pretrained(GOT_OCR_MODEL_PATH, trust_remote_code=True, low_cpu_mem_usage=True, device_map='cuda:0', use_safetensors=True).eval().cuda()
+    got_ocr_tokenizer = AutoTokenizer.from_pretrained(GOT_OCR_MODEL_PATH, trust_remote_code=True)
+    print("GOT-OCR model loaded.")
+
+def unload_got_ocr_model():
+    global got_ocr_model, got_ocr_tokenizer
+    if got_ocr_model is not None:
+        del got_ocr_model
+        del got_ocr_tokenizer
+        torch.cuda.empty_cache()
+        print("GOT-OCR model unloaded.")
 
 def take_screenshot(monitor_index, text_queries, score_threshold, vision_model_question, full_image_vision_model_question, output_filename="screenshot.png"):
     """
@@ -463,6 +501,115 @@ def process_with_chartgemma_model(image_path, question):
 
     return output_text
 
+def convert_pdf_to_png(pdf_path, output_folder):
+    """
+    Converts each page of the input PDF to a PNG file and saves them in the specified output folder.
+
+    Args:
+        pdf_path (str): The path to the input PDF file.
+        output_folder (str): The path to the output folder where the PNG files will be saved.
+    """
+    os.makedirs(output_folder, exist_ok=True)
+    images = pdf2image.convert_from_path(pdf_path)
+    for i, image in enumerate(images):
+        image.save(os.path.join(output_folder, f"page_{i+1}.png"), "PNG")
+
+# Define the base directories
+BASE_UPLOAD_FOLDER = "extensions/Lucid_Autonomy/MarkerOutput"
+BASE_RESULTS_FOLDER = "extensions/Lucid_Autonomy/MarkerOutput"
+
+def run_got_ocr(image_path, got_mode, fine_grained_mode="", ocr_color="", ocr_box=""):
+    # Extract the PDF name from the image path
+    pdf_name = os.path.basename(os.path.dirname(image_path))
+
+    # Define the upload and results folders based on the PDF name
+    UPLOAD_FOLDER = os.path.join(BASE_UPLOAD_FOLDER, pdf_name)
+    RESULTS_FOLDER = os.path.join(BASE_RESULTS_FOLDER, pdf_name)
+
+    # Ensure the directories exist
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(RESULTS_FOLDER, exist_ok=True)
+
+    unique_id = str(uuid.uuid4())
+    temp_image_path = os.path.join(UPLOAD_FOLDER, f"{unique_id}.png")
+    result_path = os.path.join(RESULTS_FOLDER, f"{unique_id}.html")
+
+    shutil.copy(image_path, temp_image_path)
+
+    try:
+        if got_mode == "plain texts OCR":
+            res = got_ocr_model.chat(got_ocr_tokenizer, temp_image_path, ocr_type='ocr')
+            return res, None
+        elif got_mode == "format texts OCR":
+            res = got_ocr_model.chat(got_ocr_tokenizer, temp_image_path, ocr_type='format', render=True, save_render_file=result_path)
+        elif got_mode == "plain multi-crop OCR":
+            res = got_ocr_model.chat_crop(got_ocr_tokenizer, temp_image_path, ocr_type='ocr')
+            return res, None
+        elif got_mode == "format multi-crop OCR":
+            res = got_ocr_model.chat_crop(got_ocr_tokenizer, temp_image_path, ocr_type='format', render=True, save_render_file=result_path)
+        elif got_mode == "plain fine-grained OCR":
+            res = got_ocr_model.chat(got_ocr_tokenizer, temp_image_path, ocr_type='ocr', ocr_box=ocr_box, ocr_color=ocr_color)
+            return res, None
+        elif got_mode == "format fine-grained OCR":
+            res = got_ocr_model.chat(got_ocr_tokenizer, temp_image_path, ocr_type='format', ocr_box=ocr_box, ocr_color=ocr_color, render=True, save_render_file=result_path)
+
+        res_markdown = res
+
+        if "format" in got_mode and os.path.exists(result_path):
+            with open(result_path, 'r') as f:
+                html_content = f.read()
+            encoded_html = base64.b64encode(html_content.encode('utf-8')).decode('utf-8')
+            iframe_src = f"data:text/html;base64,{encoded_html}"
+            iframe = f'<iframe src="{iframe_src}" width="100%" height="600px"></iframe>'
+            download_link = f'<a href="data:text/html;base64,{encoded_html}" download="result_{unique_id}.html">Download Full Result</a>'
+            return res_markdown, f"{download_link}<br>{iframe}"
+        else:
+            return res_markdown, None
+    except Exception as e:
+        return f"Error: {str(e)}", None
+    finally:
+        if os.path.exists(temp_image_path):
+            os.remove(temp_image_path)
+
+
+def compare_and_merge_texts(file1_path, file2_path, group_size, output_path):
+    # Read and clean both files
+    with open(file1_path, 'r') as f1, open(file2_path, 'r') as f2:
+        text1 = clean_text_doc1(f1.read())
+        text2 = clean_text_doc2(f2.read())
+
+    # Get word groups (case-insensitive for comparison)
+    groups1 = [group.lower() for group in get_word_groups(text1, group_size)]
+    groups2 = [group.lower() for group in get_word_groups(text2, group_size)]
+
+    # Find common groups
+    common_groups = set(groups1) & set(groups2)
+
+    # Remove common groups from text1 (case-sensitive removal)
+    for group in common_groups:
+        text1 = re.sub(re.escape(group), '', text1, flags=re.IGNORECASE)
+
+    # Merge unique parts of text1 into text2
+    merged_text = text2 + ' ' + text1.strip()
+
+    # Write the result to the output file
+    with open(output_path, 'w') as f_out:
+        f_out.write(merged_text)
+
+    print(f"Merged text has been written to {output_path}")
+
+def clean_text_doc1(text):
+    # Remove special characters that have spaces next to letters, preserve punctuation and capitalization
+    return re.sub(r'(\s[^\w\s]\s)|([^\w\s]\s)|(\s[^\w\s])', ' ', text)
+
+def clean_text_doc2(text):
+    # Preserve all special characters, punctuation, and capitalization
+    return text
+
+def get_word_groups(text, group_size):
+    words = re.findall(r'\S+', text)
+    return [' '.join(words[i:i+group_size]) for i in range(len(words) - group_size + 1)]
+
 # Global variables for Gradio inputs
 global_vars = {
     "global_monitor_index": MONITOR_INDEX,
@@ -489,6 +636,18 @@ def ui():
                 # File upload component
                 file_upload = gr.File(label="Upload PDF File")
 
+                # Radio checkbox for GOT-OCR
+                use_got_ocr = gr.Checkbox(label="Use GOT-OCR", value=True)
+
+                # Text box for group_size
+                group_size = gr.Textbox(label="Group Size", value="5")
+
+                # Checkbox for using results.json
+                use_results_json = gr.Checkbox(label="Use results.json", value=True)
+
+                # Button to clear results.json
+                clear_results_button = gr.Button(value="Clear results.json")
+
         # Update global variables when the user changes the input fields
         monitor_index.change(lambda x: global_vars.update({"global_monitor_index": int(x)}), inputs=monitor_index, outputs=None)
         text_queries.change(lambda x: global_vars.update({"global_text_queries": x}), inputs=text_queries, outputs=None)
@@ -505,13 +664,34 @@ def ui():
         # Handle file upload event
         file_upload.upload(
             fn=handle_file_upload,
-            inputs=file_upload,
+            inputs=[file_upload, use_got_ocr, group_size],
+            outputs=None
+        )
+
+        # Add the checkbox state to the global variables
+        use_results_json.change(lambda x: global_vars.update({"use_results_json": x}), inputs=use_results_json, outputs=None)
+
+        # Handle clear results.json button click
+        clear_results_button.click(
+            fn=clear_results_json,
+            inputs=None,
             outputs=None
         )
 
     return demo
 
-def handle_file_upload(file):
+# Function to clear the results.json file
+def clear_results_json():
+    """
+    Clears the contents of the results.json file and replaces it with an empty list.
+    """
+    results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
+    with open(results_json_path, 'w') as f:
+        json.dump([], f)
+    print(f"Cleared the contents of {results_json_path}")
+
+
+def handle_file_upload(file, use_got_ocr, group_size):
     """
     Handles the file upload event.
     """
@@ -521,44 +701,94 @@ def handle_file_upload(file):
         file_path = file.name
         output_folder = "extensions/Lucid_Autonomy/MarkerOutput"
         os.makedirs(output_folder, exist_ok=True)
-        process_marker_file(file_path, output_folder)
-        print(f"Processed file: {file_path}")
 
-        # Generate a list of images
-        image_list = generate_image_list(output_folder)
+        # Convert PDF to PNG
+        png_output_folder = os.path.join(output_folder, os.path.splitext(os.path.basename(file_path))[0])
+        os.makedirs(png_output_folder, exist_ok=True)
+        convert_pdf_to_png(file_path, png_output_folder)
 
-        # Locate the markdown file within the subfolder
-        pdf_name = os.path.splitext(os.path.basename(file_path))[0]
-        md_file_path = os.path.join(output_folder, pdf_name, f"{pdf_name}.md")
+        if use_got_ocr:
+            # Load GOT-OCR model
+            load_got_ocr_model()
 
-        # Match image references in the markdown file
-        image_references = match_image_references(md_file_path, image_list)
+            # Process each PNG file with GOT-OCR
+            png_files = [os.path.join(png_output_folder, f) for f in os.listdir(png_output_folder) if f.endswith(".png")]
 
-        # Add disk location information and vision model response to the markdown file
-        add_disk_location_info(md_file_path, image_references)
+            # Sort the PNG files based on the page number
+            png_files.sort(key=lambda x: int(re.search(r'page_(\d+)\.png', os.path.basename(x)).group(1)))
 
-        print(f"Updated markdown file with disk location information and vision model response: {md_file_path}")
+            got_ocr_results = []
+            for png_file in png_files:
+                got_ocr_result, _ = run_got_ocr(png_file, got_mode="format texts OCR")
+                got_ocr_results.append(got_ocr_result)
 
-        # Set the global variable for the selected image path
-        selected_image_path = md_file_path
-        selected_markdown_path= md_file_path
+            # Unload GOT-OCR model
+            unload_got_ocr_model()
 
+            # Stitch GOT-OCR outputs into a single markdown file
+            got_ocr_output_path = os.path.join(output_folder, "got_ocr_output.md")
+            with open(got_ocr_output_path, 'w') as f_out:
+                for result in got_ocr_results:
+                    f_out.write(result + "\n\n")
+
+            # Process the PDF with Marker
+            process_marker_file(file_path, output_folder)
+            print(f"Processed file: {file_path}")
+
+            # Generate a list of images
+            image_list = generate_image_list(output_folder)
+
+            # Locate the markdown file within the subfolder
+            pdf_name = os.path.splitext(os.path.basename(file_path))[0]
+            md_file_path = os.path.join(output_folder, pdf_name, f"{pdf_name}.md")
+
+            # Match image references in the markdown file
+            image_references = match_image_references(md_file_path, image_list)
+
+            # Add disk location information and vision model response to the markdown file
+            add_disk_location_info(md_file_path, image_references)
+
+            print(f"Updated markdown file with disk location information and vision model response: {md_file_path}")
+
+            # Merge GOT-OCR output with Marker output
+            compare_and_merge_texts(got_ocr_output_path, md_file_path, group_size=int(group_size), output_path=md_file_path)
+
+            # Set the global variable for the selected image path
+            selected_image_path = md_file_path
+            selected_markdown_path = md_file_path
+        else:
+            # Process the PDF with Marker without GOT-OCR
+            process_marker_file(file_path, output_folder)
+            print(f"Processed file: {file_path}")
+
+            # Generate a list of images
+            image_list = generate_image_list(output_folder)
+
+            # Locate the markdown file within the subfolder
+            pdf_name = os.path.splitext(os.path.basename(file_path))[0]
+            md_file_path = os.path.join(output_folder, pdf_name, f"{pdf_name}.md")
+
+            # Match image references in the markdown file
+            image_references = match_image_references(md_file_path, image_list)
+
+            # Add disk location information and vision model response to the markdown file
+            add_disk_location_info(md_file_path, image_references)
+
+            print(f"Updated markdown file with disk location information and vision model response: {md_file_path}")
+
+            # Set the global variable for the selected image path
+            selected_image_path = md_file_path
+            selected_markdown_path = md_file_path
+
+
+
+# Modify the input_modifier function
 def input_modifier(user_input, state):
     """
     Modifies the user input before it is processed by the LLM.
     """
     global selected_image_path
     global selected_markdown_path
-    # # Check if an image has been selected and stored in the global variable
-    # if selected_image_path:
-    #     # Construct the message with the "Image_File_Location:" trigger phrase and the image file path
-    #     image_info = f"Image_File_Location: {selected_image_path}"
-    #     # Combine the user input with the image information, separated by a newline for clarity
-    #     combined_input = f"{user_input}\n\n{image_info}"
-    #     # Reset the selected image path to None after processing
-    #     selected_image_path = None
-    #     return combined_input
-    # # If no image is selected, return the user input as is
 
     # Check if a markdown file has been selected and stored in the global variable
     if selected_markdown_path:
@@ -572,10 +802,11 @@ def input_modifier(user_input, state):
         # Reset the selected markdown path to None after processing
         selected_markdown_path = None
         return combined_input
+
     # If no markdown file is selected, return the user input as is
     return user_input
 
-
+# Modify the output_modifier function
 def output_modifier(output, state):
     """
     Modifies the LLM output before it is presented in the UI.
@@ -596,11 +827,12 @@ def output_modifier(output, state):
             # Trigger the execution of OOB tasks after a delay
             threading.Thread(target=execute_oob_tasks_with_delay).start()
 
-        # Append new compressed results
-        results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
-        with open(results_json_path, 'r') as f:
-            compressed_results = json.load(f)
-        output = append_compressed_results(output, compressed_results)
+        # Append new compressed results if the checkbox is checked
+        if global_vars.get("use_results_json", True):
+            results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
+            with open(results_json_path, 'r') as f:
+                compressed_results = json.load(f)
+            output = append_compressed_results(output, compressed_results)
 
     # Search for the "Image_File_Location:" trigger phrase in the LLM's output
     file_location_matches = re.findall(r"Image_File_Location: (.+)$", output, re.MULTILINE)
@@ -656,7 +888,6 @@ def output_modifier(output, state):
 
     # If no file location is found, return the output as is
     return output
-
 
 oob_tasks = []
 
@@ -837,6 +1068,7 @@ def get_monitor_info(monitor_index):
 
     return monitors[monitor_index]
 
+# Modify the history_modifier function
 def history_modifier(history):
     """
     Modifies the chat history before the text generation in chat mode begins.
@@ -846,12 +1078,13 @@ def history_modifier(history):
     # Clean the visible history
     history["visible"] = clean_chat_history(history["visible"])
 
-    # Inject the latest results.json into the internal history
-    results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
-    with open(results_json_path, 'r') as f:
-        compressed_results = json.load(f)
-    latest_compressed_results = json.dumps(compressed_results, indent=4)
-    history["internal"].append(["", f"<START_COMPRESSED_RESULTS>\n{latest_compressed_results}\n<END_COMPRESSED_RESULTS>"])
+    # Inject the latest results.json into the internal history if the checkbox is checked
+    if global_vars.get("use_results_json", True):
+        results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
+        with open(results_json_path, 'r') as f:
+            compressed_results = json.load(f)
+        latest_compressed_results = json.dumps(compressed_results, indent=4)
+        history["internal"].append(["", f"<START_COMPRESSED_RESULTS>\n{latest_compressed_results}\n<END_COMPRESSED_RESULTS>"])
 
     # Extract all entries from the "internal" history
     internal_entries = history["internal"]
@@ -1008,6 +1241,7 @@ def key_combo(combo):
         if key in ["ctrl", "alt", "shift"]:
             pyautogui.keyUp(key)
 
+# Main execution
 if __name__ == "__main__":
     # Launch the Gradio interface with the specified UI components
     gr.Interface(
