@@ -1,5 +1,5 @@
-CUDA_VISIBLE_DEVICES=0
-
+import os
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import gradio as gr
 import json
 import pyautogui
@@ -27,7 +27,6 @@ import spaces
 from transformers import AutoModel, AutoTokenizer
 from PIL import Image
 import numpy as np
-import os
 import base64
 import io
 import uuid
@@ -74,9 +73,21 @@ GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
 selected_image_path = None
 selected_markdown_path = None
 
+# Function to set the CUDA_VISIBLE_DEVICES environment variable
+def set_cuda_visible_devices(device_id):
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(device_id)
+
+# Function to reset the CUDA_VISIBLE_DEVICES environment variable
+def reset_cuda_visible_devices():
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
 def process_marker_file(filename, output_folder, max_pages=None, start_page=None, langs=None, batch_multiplier=2, ocr_all_pages=False):
-    model_lst = load_all_models()
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    torch.cuda.set_device(0)  # Explicitly set CUDA device
+    
+    model_lst = load_all_models(device="cuda:0")
     start = time.time()
+
     full_text, images, out_meta = convert_single_pdf(filename, model_lst, max_pages=max_pages, langs=langs, batch_multiplier=batch_multiplier, start_page=start_page, ocr_all_pages=ocr_all_pages)
 
     fname = os.path.basename(filename)
@@ -732,6 +743,8 @@ def handle_file_upload(file, use_got_ocr, group_size):
                     f_out.write(result + "\n\n")
 
             # Process the PDF with Marker
+
+            
             process_marker_file(file_path, output_folder)
             print(f"Processed file: {file_path}")
 
