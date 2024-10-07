@@ -358,6 +358,8 @@ Please consider contributing to oobabooga, they provide a valuable tool to the c
 
 
 Paper Citations (papers where I got the images):
+
 Markus Arndt and Klaus Hornberger. "Testing the Limits of Quantum Mechanical Superpositions." Nature Physics 10, 271-277 (2014).
+
 Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).
 
