@@ -355,3 +355,7 @@ Here is a screenshot of the UI:
 Feel free to improve the code, I'll be working on better instructions (shorter more concise) and exploring differnet vision model options.
 
 Please consider contributing to oobabooga, they provide a valuable tool to the community :3
+
+
+Paper Citations (papers where I got the images):
+Markus Arndt and Klaus Hornberger. "Testing the Limits of Quantum Mechanical Superpositions." Nature Physics 10, 271-277 (2014).
