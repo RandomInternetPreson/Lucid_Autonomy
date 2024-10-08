@@ -719,28 +719,7 @@ def handle_file_upload(file, use_got_ocr, group_size):
         convert_pdf_to_png(file_path, png_output_folder)
 
         if use_got_ocr:
-            # Load GOT-OCR model
-            load_got_ocr_model()
-
-            # Process each PNG file with GOT-OCR
-            png_files = [os.path.join(png_output_folder, f) for f in os.listdir(png_output_folder) if f.endswith(".png")]
-
-            # Sort the PNG files based on the page number
-            png_files.sort(key=lambda x: int(re.search(r'page_(\d+)\.png', os.path.basename(x)).group(1)))
-
-            got_ocr_results = []
-            for png_file in png_files:
-                got_ocr_result, _ = run_got_ocr(png_file, got_mode="format texts OCR")
-                got_ocr_results.append(got_ocr_result)
-
-            # Unload GOT-OCR model
-            unload_got_ocr_model()
-
-            # Stitch GOT-OCR outputs into a single markdown file
-            got_ocr_output_path = os.path.join(output_folder, "got_ocr_output.md")
-            with open(got_ocr_output_path, 'w') as f_out:
-                for result in got_ocr_results:
-                    f_out.write(result + "\n\n")
+            
 
             # Process the PDF with Marker
 
@@ -762,6 +741,34 @@ def handle_file_upload(file, use_got_ocr, group_size):
             add_disk_location_info(md_file_path, image_references)
 
             print(f"Updated markdown file with disk location information and vision model response: {md_file_path}")
+            
+            # Load GOT-OCR model
+            load_got_ocr_model()
+
+            # Process each PNG file with GOT-OCR
+            png_files = [os.path.join(png_output_folder, f) for f in os.listdir(png_output_folder) if f.lower().endswith(".png")]
+
+
+            # Sort the PNG files based on the page number or filename if page number can't be extracted
+            def get_page_number(filename):
+                match = re.search(r'page[_-]?(\d+)', os.path.basename(filename), re.IGNORECASE)
+                return int(match.group(1)) if match else float('inf')
+            
+            png_files.sort(key=get_page_number)
+
+            got_ocr_results = []
+            for png_file in png_files:
+                got_ocr_result, _ = run_got_ocr(png_file, got_mode="format texts OCR")
+                got_ocr_results.append(got_ocr_result)
+
+            # Unload GOT-OCR model
+            unload_got_ocr_model()
+
+            # Stitch GOT-OCR outputs into a single markdown file
+            got_ocr_output_path = os.path.join(output_folder, "got_ocr_output.md")
+            with open(got_ocr_output_path, 'w') as f_out:
+                for result in got_ocr_results:
+                    f_out.write(result + "\n\n")
 
             # Merge GOT-OCR output with Marker output
             compare_and_merge_texts(got_ocr_output_path, md_file_path, group_size=int(group_size), output_path=md_file_path)
