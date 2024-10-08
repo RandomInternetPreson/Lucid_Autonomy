@@ -745,16 +745,12 @@ def handle_file_upload(file, use_got_ocr, group_size):
             # Load GOT-OCR model
             load_got_ocr_model()
 
-            # Process each PNG file with GOT-OCR
-            png_files = [os.path.join(png_output_folder, f) for f in os.listdir(png_output_folder) if f.lower().endswith(".png")]
+            # Process each PNG file with GOT-OCR, only selecting files with the format "page_#.png"
+            png_files = [os.path.join(png_output_folder, f) for f in os.listdir(png_output_folder) if re.match(r'^page_\d+\.png$', f)]
 
+            # Sort the PNG files based on the page number
+            png_files.sort(key=lambda x: int(re.search(r'page_(\d+)\.png', os.path.basename(x)).group(1)))
 
-            # Sort the PNG files based on the page number or filename if page number can't be extracted
-            def get_page_number(filename):
-                match = re.search(r'page[_-]?(\d+)', os.path.basename(filename), re.IGNORECASE)
-                return int(match.group(1)) if match else float('inf')
-            
-            png_files.sort(key=get_page_number)
 
             got_ocr_results = []
             for png_file in png_files:
