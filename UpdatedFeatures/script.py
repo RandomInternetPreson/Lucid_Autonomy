@@ -47,7 +47,7 @@ configure_logging()
 oob_tasks_file = "extensions/Lucid_Autonomy/oob_tasks.json"
 
 # Configurable variables
-MONITOR_INDEX = 1  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
+MONITOR_INDEX = 0  # Index of the monitor to capture (0 for the first monitor, 1 for the second monitor, etc.)
 TEXT_QUERIES = "colored hyperlink text,clickable icons,text bar field,clickable UI buttons,UI tabs,Interactive UI Elements,blue text hyperlink"  # Comma-separated text queries for object detection
 SCORE_THRESHOLD = 0.24  # Score threshold for filtering low-probability predictions
 VISION_MODEL_QUESTION = "Keep your response to less than 5 sentences: What is the text in this image or what does this image describe? The AI is aiding in helping those with visual handicaps so the AI will focus on providing all of the relevant information for the listener."
@@ -586,7 +586,7 @@ def run_got_ocr(image_path, got_mode, fine_grained_mode="", ocr_color="", ocr_bo
 def compare_and_merge_texts(file1_path, file2_path, group_size, output_path):
     # Read and clean both files
     with open(file1_path, 'r') as f1, open(file2_path, 'r') as f2:
-        text1 = clean_text_doc1(f1.read())
+        text1 = clean_text_doc2(f1.read())
         text2 = clean_text_doc2(f2.read())
 
     # Get word groups (case-insensitive for comparison)
@@ -609,12 +609,8 @@ def compare_and_merge_texts(file1_path, file2_path, group_size, output_path):
 
     print(f"Merged text has been written to {output_path}")
 
-def clean_text_doc1(text):
-    # Remove special characters that have spaces next to letters, preserve punctuation and capitalization
-    return re.sub(r'(\s[^\w\s]\s)|([^\w\s]\s)|(\s[^\w\s])', ' ', text)
-
 def clean_text_doc2(text):
-    # Preserve all special characters, punctuation, and capitalization
+    # Preserve all special characters, punctuation, and capitalization...just dont ahhah
     return text
 
 def get_word_groups(text, group_size):
@@ -661,6 +657,7 @@ def ui():
 
         # Update global variables when the user changes the input fields
         monitor_index.change(lambda x: global_vars.update({"global_monitor_index": int(x)}), inputs=monitor_index, outputs=None)
+        
         text_queries.change(lambda x: global_vars.update({"global_text_queries": x}), inputs=text_queries, outputs=None)
         score_threshold.change(lambda x: global_vars.update({"global_score_threshold": float(x)}), inputs=score_threshold, outputs=None)
         vision_model_question.change(lambda x: global_vars.update({"global_vision_model_question": x}), inputs=vision_model_question, outputs=None)
@@ -843,12 +840,12 @@ def output_modifier(output, state):
             # Trigger the execution of OOB tasks after a delay
             threading.Thread(target=execute_oob_tasks_with_delay).start()
 
-        # Append new compressed results if the checkbox is checked
-        if global_vars.get("use_results_json", True):
-            results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
-            with open(results_json_path, 'r') as f:
-                compressed_results = json.load(f)
-            output = append_compressed_results(output, compressed_results)
+        # # Append new compressed results if the checkbox is checked
+        # if global_vars.get("use_results_json", True):
+        #     results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
+        #     with open(results_json_path, 'r') as f:
+        #         compressed_results = json.load(f)
+        #     output = append_compressed_results(output, compressed_results)
 
     # Search for the "Image_File_Location:" trigger phrase in the LLM's output
     file_location_matches = re.findall(r"Image_File_Location: (.+)$", output, re.MULTILINE)
@@ -977,18 +974,18 @@ def move_mouse_to_coordinates_raw(coordinates):
     Args:
         coordinates (str): A string containing the monitor index and coordinates in the format "monitor_index,x,y".
     """
-    monitor_index, x, y = map(int, coordinates.split(","))
+    monitor_indexx, x, y = map(int, coordinates.split(","))
     monitors = screeninfo.get_monitors()
 
-    if monitor_index >= len(monitors):
-        raise ValueError(f"Monitor index {monitor_index} is out of range. There are only {len(monitors)} monitors.")
+    if monitor_indexx >= len(monitors):
+        raise ValueError(f"Monitor index {monitor_indexx} is out of range. There are only {len(monitors)} monitors.")
 
-    monitor = monitors[monitor_index]
+    monitor = monitors[monitor_indexx]
     monitor_x, monitor_y = monitor.x, monitor.y
     absolute_x = monitor_x + x
     absolute_y = monitor_y + y
     pyautogui.moveTo(absolute_x, absolute_y)
-    print(f"Mouse moved to coordinates: ({absolute_x}, {absolute_y}) on monitor {monitor_index}")
+    print(f"Mouse moved to coordinates: ({absolute_x}, {absolute_y}) on monitor {monitor_indexx}")
 
 def left_click_coordinates_raw(coordinates):
     """
@@ -997,19 +994,19 @@ def left_click_coordinates_raw(coordinates):
     Args:
         coordinates (str): A string containing the monitor index and coordinates in the format "monitor_index,x,y".
     """
-    monitor_index, x, y = map(int, coordinates.split(","))
+    monitor_indexx, x, y = map(int, coordinates.split(","))
     monitors = screeninfo.get_monitors()
 
-    if monitor_index >= len(monitors):
-        raise ValueError(f"Monitor index {monitor_index} is out of range. There are only {len(monitors)} monitors.")
+    if monitor_indexx >= len(monitors):
+        raise ValueError(f"Monitor index {monitor_indexx} is out of range. There are only {len(monitors)} monitors.")
 
-    monitor = monitors[monitor_index]
+    monitor = monitors[monitor_indexx]
     monitor_x, monitor_y = monitor.x, monitor.y
     absolute_x = monitor_x + x
     absolute_y = monitor_y + y
     pyautogui.moveTo(absolute_x, absolute_y)
     pyautogui.click()
-    print(f"Mouse clicked at coordinates: ({absolute_x}, {absolute_y}) on monitor {monitor_index}")
+    print(f"Mouse clicked at coordinates: ({absolute_x}, {absolute_y}) on monitor {monitor_indexx}")
 
 def take_screenshot_task():
     """
