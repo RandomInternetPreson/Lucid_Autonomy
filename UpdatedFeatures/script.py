@@ -623,7 +623,7 @@ def get_word_groups(text, group_size):
 
 # Global variables for Gradio inputs
 global_vars = {
-    "global_monitor_index": MONITOR_INDEX,
+    "global_monitor_index": "global_monitor_index",
     "global_text_queries": TEXT_QUERIES,
     "global_score_threshold": SCORE_THRESHOLD,
     "global_vision_model_question": VISION_MODEL_QUESTION,
@@ -1080,10 +1080,13 @@ def move_mouse_to_image(image_name):
     with open(results_json_path, 'r') as f:
         results = json.load(f)
 
+    # Access the global monitor index from global_vars
+    monitor_index = global_vars.get("global_monitor_index", MONITOR_INDEX)
+
     for result in results:
         if result["image_name"] == image_name:
             coordinates = result["coordinates"]
-            monitor = get_monitor_info(MONITOR_INDEX)
+            monitor = get_monitor_info(monitor_index)
             move_mouse_to_coordinates(monitor, coordinates)
             break
     else:
@@ -1097,15 +1100,19 @@ def left_click_image(image_name):
     with open(results_json_path, 'r') as f:
         results = json.load(f)
 
+    # Access the global monitor index from global_vars
+    monitor_index = global_vars.get("global_monitor_index", MONITOR_INDEX)
+
     for result in results:
         if result["image_name"] == image_name:
             coordinates = result["coordinates"]
-            monitor = get_monitor_info(MONITOR_INDEX)
+            monitor = get_monitor_info(monitor_index)  # Get the monitor information as a dictionary
             move_mouse_to_coordinates(monitor, coordinates)
             pyautogui.click()  # Perform a left click
             break
     else:
         print(f"Image name '{image_name}' not found in the results.")
+
 
 def move_mouse_to_coordinates(monitor, coordinates):
     """
