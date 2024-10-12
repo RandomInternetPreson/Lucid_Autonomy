@@ -30,6 +30,15 @@ Marker output:
 LLM Asking ChartGemma:
 ![image](https://github.com/user-attachments/assets/302b7460-4165-42c0-98f0-3dd450967b7c)
 
+Current UI
+![image](https://github.com/user-attachments/assets/a35475f3-3be5-49b2-b6e4-2cbafcd2b5cd)
+
+Process Screenshot With GOT-OCR
+![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
+
+Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat
+![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+
 
 
 
