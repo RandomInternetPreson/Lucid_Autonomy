@@ -1,6 +1,0 @@
-pyautogui
-screeninfo
-spaces
-marker-pdf
-pdf2image
-verovio
