@@ -660,6 +660,9 @@ def ui():
                 # Button to clear results.json
                 clear_results_button = gr.Button(value="Clear results.json")
 
+                # New button to unload all models
+                unload_models_button = gr.Button(value="Unload All Models")
+
         # Update global variables when the user changes the input fields
         monitor_index.change(lambda x: global_vars.update({"global_monitor_index": int(x)}), inputs=monitor_index, outputs=None)
 
@@ -697,7 +700,25 @@ def ui():
             outputs=None
         )
 
+        # Click event handler for the new button
+        unload_models_button.click(
+            fn=unload_all_models,
+            inputs=None,
+            outputs=None
+        )
+
     return demo
+
+# Define the function to unload all models
+def unload_all_models():
+    unload_owlv2_model()
+    unload_minicpm_llama_model()
+    unload_chartgemma_model()
+    unload_got_ocr_model()
+    torch.cuda.empty_cache()
+    print("All models unloaded.")
+
+
 
 # Define the function to process the screenshot with GOT-OCR
 def process_screenshot_with_got_ocr(monitor_index):
