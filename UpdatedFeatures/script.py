@@ -639,6 +639,7 @@ def ui():
                 vision_model_question = gr.Textbox(label="Vision Model Question", value=VISION_MODEL_QUESTION)
                 full_image_vision_model_question = gr.Textbox(label="Full Image Vision Model Question", value=FULL_IMAGE_VISION_MODEL_QUESTION)
                 take_screenshot_button = gr.Button(value="Take Screenshot")
+                process_screenshot_button = gr.Button(value="Process Screenshot With GOT-OCR")
 
                 # File upload component
                 file_upload = gr.File(label="Upload PDF File")
@@ -657,7 +658,7 @@ def ui():
 
         # Update global variables when the user changes the input fields
         monitor_index.change(lambda x: global_vars.update({"global_monitor_index": int(x)}), inputs=monitor_index, outputs=None)
-        
+
         text_queries.change(lambda x: global_vars.update({"global_text_queries": x}), inputs=text_queries, outputs=None)
         score_threshold.change(lambda x: global_vars.update({"global_score_threshold": float(x)}), inputs=score_threshold, outputs=None)
         vision_model_question.change(lambda x: global_vars.update({"global_vision_model_question": x}), inputs=vision_model_question, outputs=None)
@@ -666,6 +667,12 @@ def ui():
         take_screenshot_button.click(
             fn=take_screenshot,
             inputs=[monitor_index, text_queries, score_threshold, vision_model_question, full_image_vision_model_question],
+            outputs=None
+        )
+
+        process_screenshot_button.click(
+            fn=process_screenshot_with_got_ocr,
+            inputs=[monitor_index],
             outputs=None
         )
 
@@ -687,6 +694,53 @@ def ui():
         )
 
     return demo
+
+# Define the function to process the screenshot with GOT-OCR
+def process_screenshot_with_got_ocr(monitor_index):
+    monitor_index = int(monitor_index)
+
+    # Get information about all monitors
+    monitors = screeninfo.get_monitors()
+
+    if monitor_index >= len(monitors):
+        raise ValueError(f"Monitor index {monitor_index} is out of range. There are only {len(monitors)} monitors.")
+
+    # Get the region of the specified monitor
+    monitor = monitors[monitor_index]
+    region = (monitor.x, monitor.y, monitor.width, monitor.height)
+
+    # Take the screenshot
+    output_dir = "extensions/Lucid_Autonomy"
+    os.makedirs(output_dir, exist_ok=True)
+    output_filename = "screenshot.png"
+    screenshot_path = os.path.join(output_dir, output_filename)
+    screenshot = pyautogui.screenshot(region=region)
+    screenshot.save(screenshot_path)
+    print(f"Screenshot saved as {screenshot_path}")
+
+    # Load the GOT-OCR model
+    load_got_ocr_model()
+    print("GOT-OCR model loaded.")
+
+    # Process the screenshot with GOT-OCR
+    got_ocr_result, _ = run_got_ocr(screenshot_path, got_mode="plain texts OCR")
+    print(f"GOT-OCR result: {got_ocr_result}")
+
+    # Save the GOT-OCR result to results.json
+    results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
+    with open(results_json_path, 'w') as f:
+        json.dump([{"image_name": "screenshot.png", "description": got_ocr_result}], f, indent=4)
+
+    # Unload the GOT-OCR model
+    unload_got_ocr_model()
+    print("GOT-OCR model unloaded.")
+
+    print("Screenshot processed with GOT-OCR and results saved to results.json")
+
+
+
+
+
 
 # Function to clear the results.json file
 def clear_results_json():
