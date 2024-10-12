@@ -232,6 +232,10 @@ def unload_chartgemma_model():
 
 def load_got_ocr_model():
     global got_ocr_model, got_ocr_tokenizer
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    torch.cuda.set_device(0)  # Explicitly set CUDA device
+    
+
     got_ocr_model = AutoModel.from_pretrained(GOT_OCR_MODEL_PATH, trust_remote_code=True, low_cpu_mem_usage=True, device_map='cuda:0', use_safetensors=True).eval().cuda()
     got_ocr_tokenizer = AutoTokenizer.from_pretrained(GOT_OCR_MODEL_PATH, trust_remote_code=True)
     print("GOT-OCR model loaded.")
