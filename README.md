@@ -1,6 +1,44 @@
 # Lucid_Autonomy (an experiment in progress, not all features are documented)
 
-Updates coming! 
+#### Changes:
+- Added more features to handle pdf OCR and image characterization analysis dynmcially - A research assistant set of features
+- Marker and GOT-OCR models are now integrated
+https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-OCR2.0/
+- Fixed screen assigment bug
+
+The Extension still lets and AI take the wheel, but it does a lot more now.
+
+A review of the UI might be the best place to start
+
+Current UI
+![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
+
+The same UI elements from the previous version of the code still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new
+
+Process Screenshot With GOT-OCR (screenshot example)
+
+![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
+
+This will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenwhot with the GOT-OCR model, the data will be appended to the user's message to the model.
+
+Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
+
+![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+
+.... Will finish updating tomorrow need to discuss:
+
+Use GOT-OCR
+Group Size
+Use results.json
+Clear results.json
+Unload All Models
+
+altering Marker files for gpu 0
+
+tests with various other vision models.  Integration of Aria.
+
+Need to figure out how to include all information for all functions in a way that makes sense :c
+
 
 ![image](https://github.com/user-attachments/assets/b4a56678-0153-4e9b-9ff6-066b28c84123)
 
@@ -23,14 +61,10 @@ Marker output:
 LLM Asking ChartGemma:
 ![image](https://github.com/user-attachments/assets/302b7460-4165-42c0-98f0-3dd450967b7c)
 
-Current UI
-![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
 
-Process Screenshot With GOT-OCR
-![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
 
-Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat
-![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+
+
 
 Sometimes ChartGemma isn't as good as the vision model but you can ask the LLM to query the "Image" model instead:
 ![image](https://github.com/user-attachments/assets/139f2ebe-3afb-409d-8fe0-6609b31a0e9c)
