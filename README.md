@@ -25,7 +25,7 @@ Resulting results.json contents, all screenshot information is temporary unless 
 
 ![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
-When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline with the markdown text where the images were present.
+When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline within the markdown text where the images were present.
 
 The Mini-CPM model will then look at each of these document images and give them a general label as either a type of data graph or image/figure.  The metadata are all placed in the markdown file produced by the Marker pipeline:
 
@@ -42,30 +42,28 @@ Similarities are defined by "Group Size" This how many words need to be in an id
 
 Making this number sufficiently large 5-10, will help remove duplicate citations while preserving differences in table detection for example.
 
+"Clear results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
 
-Clear "results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
+"Unload All Models" will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
 
-.... Will finish updating tomorrow need to discuss:
+Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma (https://huggingface.co/ahmed-masry/chartgemma), it does this by using one of two trigger phrases:
 
-Use GOT-OCR
-Group Size
-Use results.json
-Clear results.json
-Unload All Models
+```
+Data_File_Location:
+or
+Image_File_Location
+```
 
-altering Marker files for gpu 0
-
-tests with various other vision models.  Integration of Aria.
-
-Need to figure out how to include all information for all functions in a way that makes sense :c
+[Read the system prompt here for more information](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/AI_Research_Assistant_v1.txt)
 
 
-![image](https://github.com/user-attachments/assets/b4a56678-0153-4e9b-9ff6-066b28c84123)
+Here is an example of the AI asking questions on its own of an image from a document, the AI does this unprompted because it is using the system prompt "[AI_Research_Assistant_v1.yaml](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/SystemPrompt_CharacterCards)"
 
-![image](https://github.com/user-attachments/assets/6d2871b1-b512-41d6-88e6-e72b3b2576c1)
-![image](https://github.com/user-attachments/assets/a26ee978-9cf8-46e2-97cf-9c41ed8023a7)
+Sometimes ChartGemma isn't as good as the vision model but you can ask the LLM to query the "Image" model instead:
 
-Why process with so many models?
+![image](https://github.com/user-attachments/assets/139f2ebe-3afb-409d-8fe0-6609b31a0e9c)
+
+But sometimes ChartGemma is a good model to use:
 
 Let's look at an example of a bar chart where both GOT-OCR and Marker fail in reproducing the data from the chart:
 
@@ -82,12 +80,40 @@ LLM Asking ChartGemma:
 ![image](https://github.com/user-attachments/assets/302b7460-4165-42c0-98f0-3dd450967b7c)
 
 
+Here are some examples of the LLM asking questions of the various vision models and reproducing tables from the text:
+
+![image](https://github.com/user-attachments/assets/b4a56678-0153-4e9b-9ff6-066b28c84123)
+
+![image](https://github.com/user-attachments/assets/6d2871b1-b512-41d6-88e6-e72b3b2576c1)
+
+![image](https://github.com/user-attachments/assets/a26ee978-9cf8-46e2-97cf-9c41ed8023a7)
 
 
 
 
-Sometimes ChartGemma isn't as good as the vision model but you can ask the LLM to query the "Image" model instead:
-![image](https://github.com/user-attachments/assets/139f2ebe-3afb-409d-8fe0-6609b31a0e9c)
+
+.... Will finish updating tomorrow need to discuss:
+
+Use GOT-OCR
+Group Size
+Use results.json
+Clear results.json
+Unload All Models
+
+altering Marker files for gpu 0
+
+tests with various other vision models.  Integration of Aria.
+
+Need to figure out how to include all information for all functions in a way that makes sense :c
+
+
+
+
+
+
+
+
+
 
 
 
