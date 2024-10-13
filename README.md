@@ -1,10 +1,10 @@
 # Lucid_Autonomy (an experiment in progress, not all features are documented)
 
 #### Changes:
-- Added more features to handle pdf OCR and image characterization analysis dynmcially - A research assistant set of features
+- Added more features to handle pdf OCR and image characterization analysis dynamically - A research assistant set of features
 - Marker and GOT-OCR models are now integrated
 https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-OCR2.0/
-- Fixed screen assigment bug
+- Fixed screen assignment bug
 
 The Extension still lets and AI take the wheel, but it does a lot more now.
 
@@ -19,11 +19,31 @@ Process Screenshot With GOT-OCR (screenshot example)
 
 ![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
 
-This will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenwhot with the GOT-OCR model, the data will be appended to the user's message to the model.
+This will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenshot with the GOT-OCR model, the data will be appended to the user's message to the model.
 
 Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
 
 ![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+
+When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline with the markdown text where the images were present.
+
+The Mini-CPM model will then look at each of these document images and give them a general label as either a type of data graph or image/figure.  The metadata are all placed in the markdown file produced by the Marker pipeline:
+
+Example of combined image metadata:
+
+![image](https://github.com/user-attachments/assets/77f09559-cda4-419f-a0d8-f904aa52d957)
+
+
+If the "Use GOT-OCR" check box is checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
+
+This removes similar text but lets both models try to capture and report tables and equations.  For example Marker might not understand a table as good as GOT-OCR or vice versa.  
+
+Similarities are defined by "Group Size" This how many words need to be in an identical sequence between both GOT and Marker outputs before they are removed from the GOT output.  
+
+Making this number sufficiently large 5-10, will help remove duplicate citations while preserving differences in table detection for example.
+
+
+Clear "results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
 
 .... Will finish updating tomorrow need to discuss:
 
