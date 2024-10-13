@@ -41,7 +41,9 @@ Resulting results.json contents, all screenshot information is temporary unless 
 
 ![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
-If the "Use GOT-OCR" check box is checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
+#### "Use GOT-OCR" check box:
+
+If checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
 
 This removes similar text but lets both models try to capture and report tables and equations.  For example Marker might not understand a table as good as GOT-OCR or vice versa.  
 
@@ -49,11 +51,15 @@ Similarities are defined by "Group Size" This how many words need to be in an id
 
 Making this number sufficiently large 5-10, will help remove duplicate citations while preserving differences in table detection for example.
 
-####"Clear results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
+#### "Clear results.json":
 
-####"Unload All Models" will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
+Will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
 
-####Autonomous LLM utilization:
+#### "Unload All Models":
+
+Will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
+
+#### Autonomous LLM utilization:
 
 Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma (https://huggingface.co/ahmed-masry/chartgemma), it does this by using one of two trigger phrases:
 
