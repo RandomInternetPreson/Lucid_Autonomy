@@ -8,22 +8,20 @@ https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-O
 
 The Extension still lets and AI take the wheel, but it does a lot more now.
 
+For simplicity I am going to break this readme into two sections: Research Assistant and Lucid Autonomy (both can be used at the same time)
+
+# Research Asstant
+
 A review of the UI might be the best place to start
 
 Current UI
 ![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
 
-The same UI elements from the previous version of the code still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new
+The same UI elements from the previous version of the code still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
-Process Screenshot With GOT-OCR (screenshot example)
+The main feature of the research assistant is that it allows your LLM to autonmously ask questions of various vision models that relate to specific images in a document.  You can simply ask you LLM questions about figures or tables within a document and it should figure out how to ask questions about the correct images in a document.
 
-![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
-
-This will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenshot with the GOT-OCR model, the data will be appended to the user's message to the model.
-
-Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
-
-![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+####The general workflow for processing PDF files:
 
 When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline within the markdown text where the images were present.
 
@@ -33,6 +31,15 @@ Example of combined image metadata:
 
 ![image](https://github.com/user-attachments/assets/77f09559-cda4-419f-a0d8-f904aa52d957)
 
+####Process Screenshot With GOT-OCR (screenshot example)
+
+![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
+
+The user manually presses this buttion and it will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenshot with the GOT-OCR model, the data will be appended to the user's message to the model.
+
+Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
+
+![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
 If the "Use GOT-OCR" check box is checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
 
@@ -42,9 +49,11 @@ Similarities are defined by "Group Size" This how many words need to be in an id
 
 Making this number sufficiently large 5-10, will help remove duplicate citations while preserving differences in table detection for example.
 
-"Clear results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
+####"Clear results.json" will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
 
-"Unload All Models" will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
+####"Unload All Models" will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
+
+####Autonomous LLM utilization:
 
 Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma (https://huggingface.co/ahmed-masry/chartgemma), it does this by using one of two trigger phrases:
 
