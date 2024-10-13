@@ -24,7 +24,7 @@ LLM Asking ChartGemma:
 ![image](https://github.com/user-attachments/assets/302b7460-4165-42c0-98f0-3dd450967b7c)
 
 Current UI
-![image](https://github.com/user-attachments/assets/a35475f3-3be5-49b2-b6e4-2cbafcd2b5cd)
+![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
 
 Process Screenshot With GOT-OCR
 ![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
