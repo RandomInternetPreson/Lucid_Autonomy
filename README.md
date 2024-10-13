@@ -21,7 +21,7 @@ The same UI elements from the previous version of the code still exist.  However
 
 The main feature of the research assistant is that it allows your LLM to autonmously ask questions of various vision models that relate to specific images in a document.  You can simply ask you LLM questions about figures or tables within a document and it should figure out how to ask questions about the correct images in a document.
 
-####The general workflow for processing PDF files:
+#### The general workflow for processing PDF files:
 
 When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline within the markdown text where the images were present.
 
@@ -31,7 +31,7 @@ Example of combined image metadata:
 
 ![image](https://github.com/user-attachments/assets/77f09559-cda4-419f-a0d8-f904aa52d957)
 
-####Process Screenshot With GOT-OCR (screenshot example)
+#### Process Screenshot With GOT-OCR (screenshot example)
 
 ![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
 
