@@ -32,6 +32,8 @@ Process Screenshot With GOT-OCR
 Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat
 ![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
+Sometimes ChartGemma isn't as good as the vision model but you can ask the LLM to query the "Image" model instead:
+![image](https://github.com/user-attachments/assets/139f2ebe-3afb-409d-8fe0-6609b31a0e9c)
 
 
 
