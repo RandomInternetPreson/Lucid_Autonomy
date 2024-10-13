@@ -31,15 +31,6 @@ Example of combined image metadata:
 
 ![image](https://github.com/user-attachments/assets/77f09559-cda4-419f-a0d8-f904aa52d957)
 
-#### Process Screenshot With GOT-OCR (screenshot example)
-
-![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
-
-The user manually presses this buttion and it will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenshot with the GOT-OCR model, the data will be appended to the user's message to the model.
-
-Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
-
-![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
 #### "Use GOT-OCR" check box:
 
@@ -50,14 +41,6 @@ This removes similar text but lets both models try to capture and report tables 
 Similarities are defined by "Group Size" This how many words need to be in an identical sequence between both GOT and Marker outputs before they are removed from the GOT output.  
 
 Making this number sufficiently large 5-10, will help remove duplicate citations while preserving differences in table detection for example.
-
-#### "Clear results.json":
-
-Will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
-
-#### "Unload All Models":
-
-Will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
 
 #### Autonomous LLM utilization:
 
@@ -104,7 +87,23 @@ Here are some examples of the LLM asking questions of the various vision models 
 ![image](https://github.com/user-attachments/assets/a26ee978-9cf8-46e2-97cf-9c41ed8023a7)
 
 
+#### Process Screenshot With GOT-OCR (screenshot example)
 
+![image](https://github.com/user-attachments/assets/91b54485-80b7-4472-b063-7891da6f3fe9)
+
+The user manually presses this buttion and it will take a screenshot of which ever monitor is identified in "Monitor Index" and process the screenshot with the GOT-OCR model, the data will be appended to the user's message to the model.
+
+Resulting results.json contents, all screenshot information is temporary unless your LLM writes it out in the chat.
+
+![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
+
+#### "Clear results.json":
+
+Will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
+
+#### "Unload All Models":
+
+Will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
 
 
 .... Will finish updating tomorrow need to discuss:
