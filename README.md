@@ -104,7 +104,7 @@ You need to replace the files even if you are not using a multi-gpu system.
 
 #### The general workflow for processing PDF files:
 
-When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR mode.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline within the markdown text where the images were present.
+When a PDF is dropped into the "Upload PDF File" UI element, it will be processed by the Marker OCR model.  The Marker OCR pipeline is great! In addition to producing a markdown file for the OCR outputs, the pipeline will identify where in the PDF images exist, will crop out the images, and note inline within the markdown text where the images were present.
 
 The Mini-CPM model will then look at each of these document images and give them a general label as either a type of data graph or image/figure.  The metadata are all placed in the markdown file produced by the Marker pipeline:
 
