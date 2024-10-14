@@ -6,7 +6,17 @@
 https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-OCR2.0/
 - Fixed screen assignment bug
 
-The Extension still lets and AI take the wheel, but it does a lot more now.
+#### todo:
+- add double click
+- ~~integrate lucid vision multi model selection seheme~~ Sort of did this, will integrate Aria too.
+- integrate lucid websearch for AI to utilize on its own
+- ~~develop better "spatial awarness" json scheme, I have several ideas on how to contextualize the UI element spatial data better in the json file, the current method is just okay~~ Give models box corners now, LLMs can figure out where things are based off this information most of the time.
+- try out copy all and past all techniques for quick text input into model
+- ~~try out dual models clicking into each others text fields and communicating~~  Try out the [Skeptic_AI.yaml](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/SystemPrompt_CharacterCards) Have one AI be the skeptic and the other AI try to convince the skeptic of something.  [Tell the AIs something like this and you can easily get two going back and forth, very interesting](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/Conversation_Starter.txt)
+
+
+
+####The Extension still lets and AI take the wheel, but it does a lot more now.
 
 For simplicity I am going to break this readme into two sections: Research Assistant and Lucid Autonomy (both can be used at the same time)
 
@@ -57,11 +67,11 @@ Image_File_Location
 
 Here is an example of the AI asking questions on its own of an image from a document, the AI does this unprompted because it is using the system prompt "[AI_Research_Assistant_v1.yaml](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/SystemPrompt_CharacterCards)"
 
-Sometimes ChartGemma isn't as good as the vision model but you can ask the LLM to query the "Image" model instead:
+Sometimes ChartGemma isn't as good as the vision model and vise versa but you can direct the LLM to ask the other model if there is an issue:
 
 ![image](https://github.com/user-attachments/assets/139f2ebe-3afb-409d-8fe0-6609b31a0e9c)
 
-But sometimes ChartGemma is a good model to use:
+Sometimes ChartGemma is a good model to use:
 
 Let's look at an example of a bar chart where both GOT-OCR and Marker fail in reproducing the data from the chart:
 
@@ -108,28 +118,9 @@ Will try to unload any loaded models if your LLM hallucinates and tries to look 
 
 .... Will finish updating tomorrow need to discuss:
 
-Use GOT-OCR
-Group Size
-Use results.json
-Clear results.json
-Unload All Models
-
 altering Marker files for gpu 0
 
 tests with various other vision models.  Integration of Aria.
-
-Need to figure out how to include all information for all functions in a way that makes sense :c
-
-
-
-
-
-
-
-
-
-
-
 
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
 
@@ -137,13 +128,7 @@ This extension was written 100% by [Mistral-Large-Instruct-2407](https://hugging
 
 The model also wrote the first draft of the readme. 
 
-#### todo:
-- add double click
-- integrate lucid vision multi model selection seheme
-- integrate lucid websearch for AI to utilize on its own
-- develop better "spatial awarness" json scheme, I have several ideas on how to contextualize the UI element spatial data better in the json file, the current method is just okay
-- try out copy all and past all techniques for quick text input into model
-- try out dual models clicking into each others text fields and communicating
+
 
 # Lucid_Autonomy
 
