@@ -71,12 +71,12 @@ Making this number sufficiently large 5-10, will help remove duplicate citations
 
 #### Autonomous LLM utilization:
 
-Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma (https://huggingface.co/ahmed-masry/chartgemma), it does this by using one of two trigger phrases:
+Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma, it does this by using one of two trigger phrases:
 
 ```
 Data_File_Location:
 or
-Image_File_Location
+Image_File_Location:
 ```
 
 [Read the system prompt here for more information](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/AI_Research_Assistant_v1.txt)
