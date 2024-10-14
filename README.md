@@ -27,6 +27,19 @@ A review of the UI might be the best place to start
 Current UI
 ![image](https://github.com/user-attachments/assets/7dba976e-ceba-46ce-9c13-d7aa68817318)
 
+```
+Edit lines 69 and 70 with your model download locations
+
+VISION_MODEL_ID = "/home/myself/Desktop/miniCPM_llava3V/MiniCPM-V-2_6/"
+GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
+```
+[MiniCPM-V-2_6
+](https://huggingface.co/openbmb/MiniCPM-V-2_6)
+[GOT-OCR2_0
+](https://huggingface.co/stepfun-ai/GOT-OCR2_0)
+
+[ChartGemma will download automatically
+](https://huggingface.co/ahmed-masry/chartgemma)
 
 The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
