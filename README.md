@@ -2,7 +2,7 @@
 
 #### Changes:
 - Added more features to handle pdf OCR and image characterization analysis dynamically - A research assistant set of features
-- Marker, GOT-OCR, ChartGemma and ARIA models are now integrated (owlv2 and MiniCPM-V-2_6 models are still used)
+- Marker, GOT-OCR, ChartGemma and ARIA models are now integrated (owlv2 and MiniCPM-V-2_6 models (normal and 4bit) are still used)
 https://github.com/VikParuchuri/marker, https://github.com/Ucas-HaoranWei/GOT-OCR2.0/, https://huggingface.co/rhymes-ai/Aria, https://huggingface.co/ahmed-masry/chartgemma
 - Fixed screen assignment bug
 
