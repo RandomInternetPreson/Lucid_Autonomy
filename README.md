@@ -69,7 +69,7 @@ https://github.com/BoredBrownBear/text-generation-webui-model_ducking
 
 If you intend on using the ARIA model or if you have limited VRAM.  All models except ARIA will fit on one 24GB (probably 18 or 16GB too) GPU and are unloaded when not used, thus if you have one extra gpu you can reserve it for vision stuff and leave the LLM loaded on your remaining GPUs.
 
-However if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the boxk from the model ducking extension ui element will do this.
+However, if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the boxk from the model ducking extension ui element will do this.
 
 
 #### The general workflow for processing PDF files:
