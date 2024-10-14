@@ -20,7 +20,7 @@ https://github.com/VikParuchuri/marker, https://github.com/Ucas-HaoranWei/GOT-OC
 
 For simplicity I am going to break this readme into two sections: Research Assistant and Lucid Autonomy (both can be used at the same time)
 
-# Research Asstant
+# Research Assistant
 
 A review of the UI might be the best place to start
 
