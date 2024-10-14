@@ -35,6 +35,7 @@ GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
 ```
 [MiniCPM-V-2_6
 ](https://huggingface.co/openbmb/MiniCPM-V-2_6)
+
 [GOT-OCR2_0
 ](https://huggingface.co/stepfun-ai/GOT-OCR2_0)
 
