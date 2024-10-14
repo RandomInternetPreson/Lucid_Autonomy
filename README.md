@@ -112,6 +112,8 @@ Example of combined image metadata:
 
 ![image](https://github.com/user-attachments/assets/77f09559-cda4-419f-a0d8-f904aa52d957)
 
+When the User sends a message to the LLM after the PDF has been processed, the contents of the final markdown file will be sent to the LLM.
+
 
 #### "Use GOT-OCR" check box:
 
