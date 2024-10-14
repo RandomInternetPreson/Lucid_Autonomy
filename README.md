@@ -71,6 +71,12 @@ If you intend on using the ARIA model or if you have limited VRAM.  All models e
 
 However, if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the box for the model ducking extension ui element will do this.
 
+Load the model ducking extension first then the Lucid_Autonomy extension
+
+```
+--extensions text-generation-webui-model_ducking Lucid_Autonomy
+```
+
 #### Updating Custom stopping strings:
 
 You will need to update the custom stropping strings in textgen:
