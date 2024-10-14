@@ -649,7 +649,7 @@ def ui():
                 file_upload = gr.File(label="Upload PDF File")
 
                 # Radio checkbox for GOT-OCR
-                use_got_ocr = gr.Checkbox(label="Use GOT-OCR", value=True)
+                use_got_ocr = gr.Checkbox(label="Use GOT-OCR", value=False)
 
                 # Text box for group_size
                 group_size = gr.Textbox(label="Group Size", value="5")
