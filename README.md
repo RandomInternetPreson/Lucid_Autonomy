@@ -110,6 +110,10 @@ Resulting results.json contents, all screenshot information is temporary unless 
 
 ![image](https://github.com/user-attachments/assets/c85372bd-4b45-4f05-8f16-c6aed00c524f)
 
+#### "Use results.json":
+
+If unchecked will not send any updated screenshot information to the LLM.
+
 #### "Clear results.json":
 
 Will clear any screenshot information from the AI's memory, thus any information the AI has not explicitly written out during the conversation will be removed.
@@ -118,7 +122,7 @@ Will clear any screenshot information from the AI's memory, thus any information
 
 Will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
 
-#### Getting Marker to run on GPU 0 for multgpu systems:
+#### Getting Marker to run on GPU 0:
 
 It took a long time to get Marker to run on GPU 0 only, it would try to load on the last active GPU.  Usually this is the GPU running your LLM which means when Marker is trying to load itself to VRAM it will cause and OOM error because the gpu it want to load on is already in use. 
 
