@@ -25,7 +25,8 @@ For simplicity I am going to break this readme into two sections: Research Assis
 A review of the UI might be the best place to start
 
 Current UI
-![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
+![image](https://github.com/user-attachments/assets/7dba976e-ceba-46ce-9c13-d7aa68817318)
+
 
 The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
@@ -45,6 +46,8 @@ Example of combined image metadata:
 #### "Use GOT-OCR" check box:
 
 If checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
+
+This will add a more processing time and is slow compared to Marker.
 
 This removes similar text but lets both models try to capture and report tables and equations.  For example Marker might not understand a table as good as GOT-OCR or vice versa.  
 
