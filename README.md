@@ -18,7 +18,7 @@ https://github.com/VikParuchuri/marker, https://github.com/Ucas-HaoranWei/GOT-OC
 
 #### The Extension still lets and AI take the wheel, but it does a lot more now.
 
-For simplicity I am going to break this readme into two sections: Research Assistant and Lucid Autonomy (both can be used at the same time)
+For simplicity I am going to break this readme into two sections: [Research Assistant](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#research-assistant) and [Lucid Autonomy](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) (both can be used at the same time)
 
 # Research Assistant
 
