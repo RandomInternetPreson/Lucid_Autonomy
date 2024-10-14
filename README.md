@@ -27,13 +27,19 @@ A review of the UI might be the best place to start
 Current UI
 ![image](https://github.com/user-attachments/assets/7dba976e-ceba-46ce-9c13-d7aa68817318)
 
+The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
+
+The main feature of the research assistant is that it allows your LLM to autonmously ask questions of various vision models that relate to specific images in a document.  You can simply ask you LLM questions about figures or tables within a document and it should figure out how to ask questions about the correct images in a document.
+
+####  Downloading models and updating script.py file
+
 ```
 Edit lines 69 and 70 with your model download locations
 
 VISION_MODEL_ID = "/home/myself/Desktop/miniCPM_llava3V/MiniCPM-V-2_6/"
 GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
 
-and 909 and 915 for the ARIA vision model locations
+AND 909 and 915 for the ARIA vision model locations
 
 aria_model = AutoModelForCausalLM.from_pretrained(
    "/home/myself/Desktop/Aria/",
@@ -56,9 +62,15 @@ aria_processor = AutoProcessor.from_pretrained(
 
 [ARIA](https://huggingface.co/rhymes-ai/Aria)
 
-The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
-The main feature of the research assistant is that it allows your LLM to autonmously ask questions of various vision models that relate to specific images in a document.  You can simply ask you LLM questions about figures or tables within a document and it should figure out how to ask questions about the correct images in a document.
+####  It is highly recommended to use the model ducking extension here:
+
+https://github.com/BoredBrownBear/text-generation-webui-model_ducking
+
+If you intend on using the ARIA model or if you have limited VRAM.  All models except ARIA will fit on one 24GB (probably 18 or 16GB too) GPU and are unloaded when not used, thus if you have one extra gpu you can reserve it for vision stuff and leave the LLM loaded on your remaining GPUs.
+
+However if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the boxk from the model ducking extension ui element will do this.
+
 
 #### The general workflow for processing PDF files:
 
