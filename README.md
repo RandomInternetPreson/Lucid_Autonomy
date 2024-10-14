@@ -87,6 +87,20 @@ You will need to update the custom stropping strings in textgen:
 
 ![image](https://github.com/user-attachments/assets/e995d2b5-d820-403a-982c-2a9d4d445408)
 
+#### Updating Marker files to run on GPU 0:
+
+It took a long time to get Marker to run on GPU 0 only, it would try to load on the last active GPU.  Usually this is the GPU running your LLM which means when Marker is trying to load itself to VRAM it will cause and OOM error because the gpu it want to load on is already in use. 
+
+To prevent this issue you can replace the files here:
+
+```
+text-generation-webui/installer_files/env/lib/python3.11/site-packages/marker
+```
+
+[with these files.](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/Marker_Replacement_Files/edited)
+
+You need to replace the files even if you are not using a multi-gpu system.
+
 
 #### The general workflow for processing PDF files:
 
@@ -178,20 +192,6 @@ Will clear any screenshot information from the AI's memory, thus any information
 #### "Unload All Models":
 
 Will try to unload any loaded models if your LLM hallucinates and tries to look up a png that does not exist.
-
-#### Getting Marker to run on GPU 0:
-
-It took a long time to get Marker to run on GPU 0 only, it would try to load on the last active GPU.  Usually this is the GPU running your LLM which means when Marker is trying to load itself to VRAM it will cause and OOM error because the gpu it want to load on is already in use. 
-
-To prevent this issue you can replace the files here:
-
-```
-text-generation-webui/installer_files/env/lib/python3.11/site-packages/marker
-```
-
-[with these files.](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/Marker_Replacement_Files/edited)
-
-You need to replace the files even if you are not using a multi-gpu system.
 
 #### Example using the ARIA model, and an example of how you can ask your LLM to use any of the vision models really for any png, not just those in a document.
 
