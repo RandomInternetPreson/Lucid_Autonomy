@@ -134,15 +134,13 @@ You need to replace the files even if you are not using a multi-gpu system.
 
 
 
-
+# Lucid_Autonomy
 
 An extension that lets the AI take the wheel, allowing it to use the mouse and keyboard, recognize UI elements, and prompt itself :3
 
 This extension was written 100% by [Mistral-Large-Instruct-2407](https://huggingface.co/mistralai/Mistral-Large-Instruct-2407) quantized to 8-bit precision with [llama.cpp](https://github.com/ggerganov/llama.cpp) locally.  The transcriptions to achieve this are presented here [RECEIPTS](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/Receipts), they are not ordered well and some conversations lead to dead ends, however most of the errors were me misunderstanding something.  This model is great!
 
 The model also wrote the first draft of the readme. 
-
-# Lucid_Autonomy
 
 ## Table of Contents
 1. [Overview](#overview)
