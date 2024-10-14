@@ -2,13 +2,13 @@
 
 #### Changes:
 - Added more features to handle pdf OCR and image characterization analysis dynamically - A research assistant set of features
-- Marker and GOT-OCR models are now integrated
-https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-OCR2.0/
+- Marker, GOT-OCR, ChartGemma and ARIA models are now integrated (owlv2 and MiniCPM-V-2_6 models are still used)
+https://github.com/VikParuchuri/marker, https://github.com/Ucas-HaoranWei/GOT-OCR2.0/, https://huggingface.co/rhymes-ai/Aria, https://huggingface.co/ahmed-masry/chartgemma
 - Fixed screen assignment bug
 
 #### todo:
 - add double click
-- ~~integrate lucid vision multi model selection seheme~~ Sort of did this, will integrate Aria too.
+- ~~integrate lucid vision multi model selection seheme~~ ~~Sort of did this, will integrate Aria too.~~
 - integrate lucid websearch for AI to utilize on its own
 - ~~develop better "spatial awarness" json scheme, I have several ideas on how to contextualize the UI element spatial data better in the json file, the current method is just okay~~ Give models box corners now, LLMs can figure out where things are based off this information most of the time.
 - try out copy all and past all techniques for quick text input into model
@@ -32,6 +32,18 @@ Edit lines 69 and 70 with your model download locations
 
 VISION_MODEL_ID = "/home/myself/Desktop/miniCPM_llava3V/MiniCPM-V-2_6/"
 GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
+
+and 909 and 915 for the ARIA vision model locations
+
+aria_model = AutoModelForCausalLM.from_pretrained(
+   "/home/myself/Desktop/Aria/",
+   device_map="auto",
+   torch_dtype=torch.bfloat16,
+   trust_remote_code=True
+)
+aria_processor = AutoProcessor.from_pretrained(
+   "/home/myself/Desktop/Aria/",
+   trust_remote_code=True
 ```
 [MiniCPM-V-2_6
 ](https://huggingface.co/openbmb/MiniCPM-V-2_6)
@@ -41,6 +53,8 @@ GOT_OCR_MODEL_PATH = '/home/myself/Desktop/GOT_OCR/ModelGOT-OCR2_0/'
 
 [ChartGemma will download automatically
 ](https://huggingface.co/ahmed-masry/chartgemma)
+
+[ARIA](https://huggingface.co/rhymes-ai/Aria)
 
 The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
@@ -150,6 +164,9 @@ text-generation-webui/installer_files/env/lib/python3.11/site-packages/marker
 
 You need to replace the files even if you are not using a multi-gpu system.
 
+#### Example using the ARIA model, and an example of how you can ask your LLM to use any of the vision models really for any png, not just those in a document.
+
+![image](https://github.com/user-attachments/assets/ec026418-754e-4e43-ab07-d5909f76b2b8)
 
 
 # Lucid_Autonomy
