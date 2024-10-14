@@ -14,7 +14,7 @@ https://github.com/VikParuchuri/marker, https://github.com/Ucas-HaoranWei/GOT-OC
 - try out copy all and past all techniques for quick text input into model
 - ~~try out dual models clicking into each others text fields and communicating~~  Try out the [Skeptic_AI.yaml](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/SystemPrompt_CharacterCards) Have one AI be the skeptic and the other AI try to convince the skeptic of something.  [Tell the AIs something like this and you can easily get two going back and forth, very interesting](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/Conversation_Starter.txt)
 
-
+#### Windows users might need to change the slashes on the path directories?
 
 #### The Extension still lets and AI take the wheel, but it does a lot more now.
 
