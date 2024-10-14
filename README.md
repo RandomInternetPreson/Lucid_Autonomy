@@ -69,7 +69,17 @@ https://github.com/BoredBrownBear/text-generation-webui-model_ducking
 
 If you intend on using the ARIA model or if you have limited VRAM.  All models except ARIA will fit on one 24GB (probably 18 or 16GB too) GPU and are unloaded when not used, thus if you have one extra gpu you can reserve it for vision stuff and leave the LLM loaded on your remaining GPUs.
 
-However, if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the boxk from the model ducking extension ui element will do this.
+However, if you only have one GPU or cannot load the ARIA model and the LLM model at the same time (the ARIA model takes about 60+GB of vram), you will need to unload the LLM prior to when the vision model loads.  Simply checking the box for the model ducking extension ui element will do this.
+
+#### Updating Custom stopping strings:
+
+You will need to update the custom stropping strings in textgen:
+
+```
+"<START_COMPRESSED_RESULTS>", "Vision Model Responses:"
+```
+
+![image](https://github.com/user-attachments/assets/e995d2b5-d820-403a-982c-2a9d4d445408)
 
 
 #### The general workflow for processing PDF files:
@@ -85,9 +95,9 @@ Example of combined image metadata:
 
 #### "Use GOT-OCR" check box:
 
-If checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
-
 This will add a more processing time and is slow compared to Marker.
+
+If checked, then the pdf will have each of its pages converted to a .png file and each file will be fed into the GOT-OCR pipeline/model.  The resulting data will be combined into a singel markdown file called got_ocr_output.md.  This file is then compared to the markdown file produced by Marker and similarities are deleted from the GOT-OCR output, with the differences from GOT-OCR to Marker being appended to the bottom of the Marker output.
 
 This removes similar text but lets both models try to capture and report tables and equations.  For example Marker might not understand a table as good as GOT-OCR or vice versa.  
 
@@ -97,16 +107,17 @@ Making this number sufficiently large 5-10, will help remove duplicate citations
 
 #### Autonomous LLM utilization:
 
-Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma, it does this by using one of two trigger phrases:
+Your favorite LLM can ask questions of two different vision models.  Mini-CPM and Chartgemma, it does this by using one of three trigger phrases:
 
 ```
 Data_File_Location:
 or
 Image_File_Location:
+or
+ARIA_File_Location:
 ```
 
-[Read the system prompt here for more information](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/AI_Research_Assistant_v1.txt)
-
+[Read the system prompt here for more information](https://github.com/RandomInternetPreson/Lucid_Autonomy/blob/main/SystemPrompt_CharacterCards/AI_Research_Assistant_v1.txt) There is a seperate ARIA specific version if you intend to use ARIA.
 
 Here is an example of the AI asking questions on its own of an image from a document, the AI does this unprompted because it is using the system prompt "[AI_Research_Assistant_v1.yaml](https://github.com/RandomInternetPreson/Lucid_Autonomy/tree/main/SystemPrompt_CharacterCards)"
 
