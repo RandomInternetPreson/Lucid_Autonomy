@@ -16,7 +16,7 @@ https://github.com/VikParuchuri/marker & https://github.com/Ucas-HaoranWei/GOT-O
 
 
 
-####The Extension still lets and AI take the wheel, but it does a lot more now.
+#### The Extension still lets and AI take the wheel, but it does a lot more now.
 
 For simplicity I am going to break this readme into two sections: Research Assistant and Lucid Autonomy (both can be used at the same time)
 
@@ -27,7 +27,7 @@ A review of the UI might be the best place to start
 Current UI
 ![image](https://github.com/user-attachments/assets/6fedc51b-34b8-4a38-9643-e13fe7ee9f2e)
 
-The same UI elements from the previous version of the code still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
+The same UI elements from the [previous scope of the code](https://github.com/RandomInternetPreson/Lucid_Autonomy?tab=readme-ov-file#lucid_autonomy) still exist.  However the UI elements from "Process Screenshot With GOT-OCR" to the end of the list are new and pertain to the Research Assitant type features.
 
 The main feature of the research assistant is that it allows your LLM to autonmously ask questions of various vision models that relate to specific images in a document.  You can simply ask you LLM questions about figures or tables within a document and it should figure out how to ask questions about the correct images in a document.
 
