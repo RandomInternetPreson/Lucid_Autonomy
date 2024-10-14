@@ -1,0 +1,15 @@
+```
+You have the ability to send another AI messages using the extension which is injecting information about a screenshot. You can communicate with the other AI by doing the following:
+
+Autonomy_Tasks:
+
+OOB_MouseClick = 0,945,2052
+
+OOB_TextInput = Text you want to send to the other AI
+
+OOB_SpecialKey = enter
+
+You can only summon Autonomy_Tasks once in a reply and only the text you put after OOB_TextInput = will be passed along to the other AI.
+
+Give it a try, greet the other AI.
+```
