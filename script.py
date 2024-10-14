@@ -4,7 +4,7 @@ import gradio as gr
 import json
 import pyautogui
 import screeninfo
-from transformers import Owlv2Processor, Owlv2ForObjectDetection, AutoModel, AutoTokenizer, AutoProcessor, PaliGemmaForConditionalGeneration
+from transformers import Owlv2Processor, Owlv2ForObjectDetection, AutoModel, AutoTokenizer, AutoProcessor, PaliGemmaForConditionalGeneration, AutoModelForCausalLM
 from PIL import Image, ImageDraw
 import torch
 import os
@@ -36,7 +36,7 @@ import time
 import shutil
 from pathlib import Path
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"  # For some reason, transformers decided to use .isin for a simple op, which is not supported on MPS
-
+import gc
 from marker.convert import convert_single_pdf
 from marker.logger import configure_logging
 from marker.models import load_all_models
@@ -898,7 +898,89 @@ def input_modifier(user_input, state):
     # If no markdown file is selected, return the user input as is
     return user_input
 
-# Modify the output_modifier function
+aria_model = None
+aria_processor = None
+
+def load_aria_model():
+    global aria_model, aria_processor
+    if aria_model is None:
+        print("Loading ARIA model...")
+        aria_model = AutoModelForCausalLM.from_pretrained(
+            "/home/myself/Desktop/Aria/",
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            trust_remote_code=True
+        )
+        aria_processor = AutoProcessor.from_pretrained(
+            "/home/myself/Desktop/Aria/",
+            trust_remote_code=True
+        )
+        print("ARIA model loaded successfully.")
+    else:
+        print("ARIA model already loaded.")
+
+def unload_aria_model():
+    global aria_model, aria_processor
+    if aria_model is not None:
+        print("Unloading ARIA model...")
+        # Move model to CPU before deletion
+        aria_model.cpu()
+        # Delete the model and processor
+        del aria_model
+        del aria_processor
+        # Set to None to indicate they're unloaded
+        aria_model = None
+        aria_processor = None
+        # Clear CUDA cache
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        # Run garbage collection
+        gc.collect()
+        print("ARIA model unloaded successfully.")
+    else:
+        print("ARIA model not loaded, nothing to unload.")
+    
+    # Print current GPU memory usage
+    if torch.cuda.is_available():
+        print(f"Current GPU memory allocated: {torch.cuda.memory_allocated() / 1e9:.2f} GB")
+        print(f"Current GPU memory reserved: {torch.cuda.memory_reserved() / 1e9:.2f} GB")
+
+def process_with_aria_model(image_path, question):
+    global aria_model, aria_processor
+    
+    if aria_model is None:
+        load_aria_model()
+    
+    print("Processing image with ARIA model...")
+    image = Image.open(image_path).convert("RGB")
+    messages = [
+        {"role": "user", "content": [
+            {"text": None, "type": "image"},
+            {"text": question, "type": "text"},
+        ]}
+    ]
+    
+    text = aria_processor.apply_chat_template(messages, add_generation_prompt=True)
+    inputs = aria_processor(text=text, images=image, return_tensors="pt")
+    inputs["pixel_values"] = inputs["pixel_values"].to(aria_model.dtype)
+    inputs = {k: v.to(aria_model.device) for k, v in inputs.items()}
+
+    with torch.inference_mode(), torch.cuda.amp.autocast(dtype=torch.bfloat16):
+        output = aria_model.generate(
+            **inputs,
+            max_new_tokens=1024,
+            stop_strings=["<|im_end|>"],
+            tokenizer=aria_processor.tokenizer,
+            do_sample=True,
+            temperature=0.9,
+        )
+        output_ids = output[0][inputs["input_ids"].shape[1]:]
+        result = aria_processor.decode(output_ids, skip_special_tokens=True)
+
+    print("Image processing complete.")
+    return result
+
+# Modify the output_modifier function to handle the new trigger phrase
 def output_modifier(output, state):
     """
     Modifies the LLM output before it is presented in the UI.
@@ -918,13 +1000,6 @@ def output_modifier(output, state):
 
             # Trigger the execution of OOB tasks after a delay
             threading.Thread(target=execute_oob_tasks_with_delay).start()
-
-        # # Append new compressed results if the checkbox is checked
-        # if global_vars.get("use_results_json", True):
-        #     results_json_path = "extensions/Lucid_Autonomy/ImageOutputTest/results.json"
-        #     with open(results_json_path, 'r') as f:
-        #         compressed_results = json.load(f)
-        #     output = append_compressed_results(output, compressed_results)
 
     # Search for the "Image_File_Location:" trigger phrase in the LLM's output
     file_location_matches = re.findall(r"Image_File_Location: (.+)$", output, re.MULTILINE)
@@ -978,8 +1053,35 @@ def output_modifier(output, state):
         output_with_responses = f"{output}\n\nVision Model Responses:\n{vision_model_response}\n\n{formatted_image_path}"
         return output_with_responses
 
+    # Search for the "ARIA_File_Location:" trigger phrase in the LLM's output
+    aria_file_location_matches = re.findall(r"ARIA_File_Location: (.+)$", output, re.MULTILINE)
+    if aria_file_location_matches:
+        # Extract the first match (assuming only one file location per output)
+        file_path = aria_file_location_matches[0]
+        # Extract the questions for the vision model
+        questions_section, _ = output.split(f"ARIA_File_Location: {file_path}", 1)
+        # Remove all newlines from the questions section and replace them with spaces
+        questions = " ".join(questions_section.strip().splitlines())
+
+        # Initialize an empty response string
+        vision_model_response = ""
+
+        load_aria_model()
+        # Process the image with the ARIA model
+        vision_model_response = process_with_aria_model(file_path, questions)
+        unload_aria_model()
+
+        # Format the image path for inline display
+        relative_path = file_path.split("extensions/")[-1]
+        formatted_image_path = f"<img src=\"/file/extensions/{relative_path}\">"
+
+        # Append the vision model's responses and the formatted image path to the output
+        output_with_responses = f"{output}\n\nVision Model Responses:\n{vision_model_response}\n\n{formatted_image_path}"
+        return output_with_responses
+
     # If no file location is found, return the output as is
     return output
+
 
 oob_tasks = []
 
@@ -1230,6 +1332,37 @@ def history_modifier(history):
             for file_path in data_file_location_matches:
                 # Construct the full match string including the trigger phrase
                 full_match_string = f"Data_File_Location: {file_path}"
+                # Search for the exact same string in the "visible" history
+                for visible_entry in history["visible"]:
+                    # Extract the text content of the visible entry
+                    visible_text = visible_entry[1]
+                    # If the "visible" entry contains the full match string
+                    if full_match_string in visible_text:
+                        # Split the "visible" text at the full match string
+                        _, after_match = visible_text.split(full_match_string, 1)
+                        # Find the position where the ".png" part ends in the "internal" text
+                        png_end_pos = internal_text.find(file_path) + len(file_path)
+                        # If the ".png" part is found and there is content after it
+                        if png_end_pos < len(internal_text) and internal_text[png_end_pos] == "\n":
+                            # Extract the existing content after the ".png" part in the "internal" text
+                            _ = internal_text[png_end_pos:]
+                            # Replace the existing content after the ".png" part in the "internal" text
+                            # with the corresponding content from the "visible" text
+                            new_internal_text = internal_text[:png_end_pos] + after_match
+                            # Update the "internal" history entry with the new text
+                            history["internal"][internal_index][1] = new_internal_text
+                        # If there is no content after the ".png" part in the "internal" text,
+                        # append the content from the "visible" text directly
+                        else:
+                            # Append the content after the full match string from the "visible" text
+                            history["internal"][internal_index][1] += after_match
+        # Search for the "ARIA_File_Location:" trigger phrase in the internal text
+        data_file_location_matches = re.findall(r"ARIA_File_Location: (.+)$", internal_text, re.MULTILINE)
+        if data_file_location_matches:
+            # Iterate over each match found in the "internal" entry
+            for file_path in data_file_location_matches:
+                # Construct the full match string including the trigger phrase
+                full_match_string = f"ARIA_File_Location: {file_path}"
                 # Search for the exact same string in the "visible" history
                 for visible_entry in history["visible"]:
                     # Extract the text content of the visible entry
