@@ -665,7 +665,6 @@ def ui():
 
         # Update global variables when the user changes the input fields
         monitor_index.change(lambda x: global_vars.update({"global_monitor_index": int(x)}), inputs=monitor_index, outputs=None)
-
         text_queries.change(lambda x: global_vars.update({"global_text_queries": x}), inputs=text_queries, outputs=None)
         score_threshold.change(lambda x: global_vars.update({"global_score_threshold": float(x)}), inputs=score_threshold, outputs=None)
         vision_model_question.change(lambda x: global_vars.update({"global_vision_model_question": x}), inputs=vision_model_question, outputs=None)
@@ -685,7 +684,7 @@ def ui():
 
         # Handle file upload event
         file_upload.upload(
-            fn=handle_file_upload,
+            fn=handle_file_upload_and_copy,
             inputs=[file_upload, use_got_ocr, group_size],
             outputs=None
         )
@@ -708,6 +707,28 @@ def ui():
         )
 
     return demo
+
+def handle_file_upload_and_copy(file, use_got_ocr, group_size):
+    """
+    Handles the file upload event and creates a copy of the PDF.
+    """
+    if file is not None:
+        file_path = file.name
+        output_folder = "extensions/Lucid_Autonomy/MarkerOutput"
+        os.makedirs(output_folder, exist_ok=True)
+
+        # Create a subfolder with the same name as the PDF
+        pdf_name = os.path.splitext(os.path.basename(file_path))[0]
+        pdf_subfolder = os.path.join(output_folder, pdf_name)
+        os.makedirs(pdf_subfolder, exist_ok=True)
+
+        # Copy the uploaded PDF to the subfolder
+        pdf_copy_path = os.path.join(pdf_subfolder, os.path.basename(file_path))
+        shutil.copy2(file_path, pdf_copy_path)
+        print(f"Created a copy of the PDF: {pdf_copy_path}")
+
+        # Continue with the rest of the file processing
+        handle_file_upload(file, use_got_ocr, group_size)
 
 # Define the function to unload all models
 def unload_all_models():
@@ -837,7 +858,7 @@ def handle_file_upload(file, use_got_ocr, group_size):
             unload_got_ocr_model()
 
             # Stitch GOT-OCR outputs into a single markdown file
-            got_ocr_output_path = os.path.join(output_folder, "got_ocr_output.md")
+            got_ocr_output_path = os.path.join(png_output_folder, "got_ocr_output.md")
             with open(got_ocr_output_path, 'w') as f_out:
                 for result in got_ocr_results:
                     f_out.write(result + "\n\n")
