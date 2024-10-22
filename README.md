@@ -212,7 +212,7 @@ The model also wrote the first draft of the readme.
 1. [Overview](#overview)
 2. [How the Extension Works](#how-the-extension-works)
 3. [Test your setup before involving your LLM](#Test-your-setup-before-involving-your-LLM)
-4. [Test your setup with your LLM using the extension, and example of how to use the extension](#test-your-setup-with-your-llm-using-the-extension-and-example-of-how-to-use-the-extension-test-with-llama-31-70b-converted-into-an-8-bit-guff)
+4. [Test your setup with your LLM using the extension, and example of how to use the extension](#test-your-setup-with-your-llm-using-the-extension-and-example-of-how-to-use-the-extension-test-with-llama-31-70b-converted-into-an-8-bit-gguf)
 5. [Teaching Your AI](#teaching-your-ai)
 6. [Understanding the speficificss of how the extension works](#how-to-understand-the-specifics-of-what-the-extension-can-do-and-how-to-properly-format-tasks)
 7. [Configure Settings](#tconfigure-settings)
@@ -294,7 +294,7 @@ https://huggingface.co/spaces/merve/owlv2
 
 and I had Mistral update the code to work offline, use a different model, and add more functionality.
 
-# Test your setup with your LLM using the extension, and example of how to use the extension (test with Llama-3.1-70B converted into an 8-bit .guff)
+# Test your setup with your LLM using the extension, and example of how to use the extension (test with Llama-3.1-70B converted into an 8-bit .gguf)
 
 The repo includes a file called "WebColorChange.html" you can run this in a web browser and see if your model is functioning correctly.  The webpage will load white, but will randomly change colors (through a finite list of colors) when the correct button is pressed.  Try the following steps to see if things are functioning correctly:
 
